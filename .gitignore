@@ -1,6 +1,9 @@
+# artifacts of various build tools, dkpg, and SOMETHING FOR .EXEs?
 *.tar.gz
 *.deb
 *.exe
+
+# Why are these ignored?  "src" seems like a source code kinda' prefix.
 src/bitcoin
 src/zcashd
 src/zcash-cli
@@ -8,6 +11,7 @@ src/zcash-gtest
 src/zcash-tx
 src/test/test_bitcoin
 
+# Several minutes of DuckDuckGoing haven't turned up definitive results.
 *zcashTest.pk
 *zcashTest.vk
 
@@ -37,6 +41,7 @@ src/config/bitcoin-config.h.in
 src/config/stamp-h1
 share/setup.nsi
 
+# Hmmm...   maybe virtualenv?
 cache/
 venv-mnf/
 src/univalue/gen

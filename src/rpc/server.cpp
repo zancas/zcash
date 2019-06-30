@@ -429,17 +429,18 @@ std::string JSONRPCExecBatch(const UniValue& vReq)
 
 UniValue CRPCTable::execute(const std::string &strMethod, const UniValue &params) const
 {
-    // Return immediately if in warmup
-    {
-        LOCK(cs_rpcWarmup);
-        if (fRPCInWarmup)
-            throw JSONRPCError(RPC_IN_WARMUP, rpcWarmupStatus);
-    }
-
     // Find method
     const CRPCCommand *pcmd = tableRPC[strMethod];
     if (!pcmd)
         throw JSONRPCError(RPC_METHOD_NOT_FOUND, "Method not found");
+
+    // Return if in warmup
+    {
+        LOCK(cs_rpcWarmup);
+        if (fRPCInWarmup && pcmd->name != "z_listaddresses")
+            throw JSONRPCError(RPC_IN_WARMUP, rpcWarmupStatus);
+    }
+
 
     g_rpcSignals.PreCommand(*pcmd);
 

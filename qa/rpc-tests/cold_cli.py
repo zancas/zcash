@@ -12,7 +12,8 @@ import os, shutil, subprocess
 
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import assert_equal, initialize_datadir, \
-    start_node, stop_node, wait_bitcoinds
+    start_node, stop_node, wait_bitcoinds, rpc_port
+from test_framework.authproxy import AuthServiceProxy
 
 
 # Use the the TestFramework for a consistent interface the runner/reporter.
@@ -24,19 +25,23 @@ class ColdCLITest(BitcoinTestFramework):
                  "-keypool=1",
                  "-datadir="+self.datadir,
                  "-discover=0" ]
-        bitcoind_process = subprocess.Popen(args)
-        print "initialize_chain: bitcoind started, calling bitcoin-cli -rpcwait getblockcount"
-        subprocess.check_call([ os.getenv("BITCOINCLI", "bitcoin-cli"),
-                                "-datadir="+self.datadir,
-                                "-rpcwait",
-                                "getblockcount" ],
-                              stdout=subprocess.PIPE)
-        print "initialize_chain: bitcoin-cli -rpcwait getblockcount completed"
+        self.bitcoind_process = subprocess.Popen(args)
+        #print "initialize_chain: bitcoind started, calling bitcoin-cli -rpcwait getblockcount"
+        #subprocess.check_call([ os.getenv("BITCOINCLI", "bitcoin-cli"),
+        #                        "-datadir="+self.datadir,
+        #                        "-rpcwait",
+        #                        "getblockcount" ],
+        #                      stdout=subprocess.PIPE)
+        #print "initialize_chain: bitcoin-cli -rpcwait getblockcount completed"
+        #import time
+        #time.sleep(1)
+        url = "http://rt:rt@%s:%d" % ('127.0.0.1', rpc_port(0))
+        self.nodes = [AuthServiceProxy(url)]
 
     def _initialize_test_configuration(self):
         self.datadir = initialize_datadir("cache", 0) # Overwrite port/rpcport in zcash.conf
         self.options, self.args = self.parse_options_args() 
-        self.nodes = [start_node(0, self.options.tmpdir)]
+        #self.nodes = [start_node(0, self.options.tmpdir)]
         from_dir = os.path.join("cache", "node0")
         to_dir = os.path.join(self.options.tmpdir,  "node0")
         print("from_dir: %s :: to_dir: %s" % (from_dir, to_dir))
@@ -49,7 +54,6 @@ class ColdCLITest(BitcoinTestFramework):
         pass
         
     def run_test(self):
-        pass
 
 if __name__ == '__main__':
     ColdCLITest().main()

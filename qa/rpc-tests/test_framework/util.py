@@ -92,7 +92,8 @@ def initialize_chain(test_dir):
     bitcoind and bitcoin-cli must be in search path.
     """
 
-    if not os.path.isdir(os.path.join("cache", "node0")):
+    cache_dir = os.path.join("cache", "node0")
+    if not os.path.isdir(cache_dir):
         devnull = open("/dev/null", "w+")
         # Create cache directories, run bitcoinds:
         for i in range(4):
@@ -143,6 +144,7 @@ def initialize_chain(test_dir):
     for i in range(4):
         from_dir = os.path.join("cache", "node"+str(i))
         to_dir = os.path.join(test_dir,  "node"+str(i))
+        print("from_dir: %s :: to_dir: %s" % (from_dir, to_dir))
         shutil.copytree(from_dir, to_dir)
         initialize_datadir(test_dir, i) # Overwrite port/rpcport in zcash.conf
 
@@ -185,15 +187,16 @@ def start_node(i, dirname, extra_args=None, rpchost=None, timewait=None, binary=
     args = [ binary, "-datadir="+datadir, "-keypool=1", "-discover=0", "-rest" ]
     if extra_args is not None: args.extend(extra_args)
     bitcoind_processes[i] = subprocess.Popen(args)
-    devnull = open("/dev/null", "w+")
+    #devnull = open("/dev/null", "w+")
     if os.getenv("PYTHON_DEBUG", ""):
         print "start_node: bitcoind started, calling bitcoin-cli -rpcwait getblockcount"
-    subprocess.check_call([ os.getenv("BITCOINCLI", "bitcoin-cli"), "-datadir="+datadir] +
+        print("rpchost is: %s" % rpchost)
+    p = subprocess.Popen([ os.getenv("BITCOINCLI", "bitcoin-cli"), "-datadir="+datadir] +
                           _rpchost_to_args(rpchost)  +
-                          ["-rpcwait", "getblockcount"], stdout=devnull)
+                          ["-rpcwait", "getblockcount"], stdout=subprocess.PIPE)
     if os.getenv("PYTHON_DEBUG", ""):
         print "start_node: calling bitcoin-cli -rpcwait getblockcount returned"
-    devnull.close()
+    #devnull.close()
     url = "http://rt:rt@%s:%d" % (rpchost or '127.0.0.1', rpc_port(i))
     if timewait is not None:
         proxy = AuthServiceProxy(url, timeout=timewait)

@@ -85,7 +85,7 @@ class BitcoinTestFramework(object):
         wait_bitcoinds()
         self.setup_network(False)
 
-    def main(self):
+    def parse_options_args(self):
         import optparse
 
         parser = optparse.OptionParser(usage="%prog [options]")
@@ -100,8 +100,13 @@ class BitcoinTestFramework(object):
         parser.add_option("--tracerpc", dest="trace_rpc", default=False, action="store_true",
                           help="Print out all RPC calls as they are made")
         self.add_options(parser)
-        (self.options, self.args) = parser.parse_args()
+        opts, args = parser.parse_args()
+        print((opts, args))
+        return (opts, args)
 
+    def main(self):
+        if not (self.options or self.args):
+            self.options, self.args = self.parse_options_args()
         if self.options.trace_rpc:
             import logging
             logging.basicConfig(level=logging.DEBUG)
@@ -134,6 +139,7 @@ class BitcoinTestFramework(object):
 
         if not self.options.noshutdown:
             print("Stopping nodes")
+            print(self.options.tmpdir)
             stop_nodes(self.nodes)
             wait_bitcoinds()
         else:

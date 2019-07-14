@@ -11,6 +11,7 @@ export BITCOIND=${REAL_BITCOIND}
 #Run the tests
 
 testScripts=(
+    'cold_cli.py'
     'paymentdisclosure.py'
     'prioritisetransaction.py'
     'wallet_treestate.py'

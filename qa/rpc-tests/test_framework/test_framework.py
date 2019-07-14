@@ -85,7 +85,7 @@ class BitcoinTestFramework(object):
         wait_bitcoinds()
         self.setup_network(False)
 
-    def main(self):
+    def parse_options_args(self):
         import optparse
 
         parser = optparse.OptionParser(usage="%prog [options]")
@@ -100,8 +100,12 @@ class BitcoinTestFramework(object):
         parser.add_option("--tracerpc", dest="trace_rpc", default=False, action="store_true",
                           help="Print out all RPC calls as they are made")
         self.add_options(parser)
-        (self.options, self.args) = parser.parse_args()
+        opts, args = parser.parse_args()
+        return (opts, args)
 
+    def main(self):
+        if not (hasattr(self, "options") or hasattr(self, "args")):
+            self.options, self.args = self.parse_options_args()
         if self.options.trace_rpc:
             import logging
             logging.basicConfig(level=logging.DEBUG)
@@ -131,13 +135,14 @@ class BitcoinTestFramework(object):
         except Exception as e:
             print("Unexpected exception caught during testing: "+str(e))
             traceback.print_tb(sys.exc_info()[2])
+        finally:
+            if not self.options.noshutdown:
+                stop_nodes(self.nodes)
+                wait_bitcoinds()
+            else:
+                print("Note: bitcoinds were not stopped and may still be running")
+            
 
-        if not self.options.noshutdown:
-            print("Stopping nodes")
-            stop_nodes(self.nodes)
-            wait_bitcoinds()
-        else:
-            print("Note: bitcoinds were not stopped and may still be running")
 
         if not self.options.nocleanup and not self.options.noshutdown:
             print("Cleaning up")

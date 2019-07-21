@@ -87,7 +87,7 @@ def deser_string(f):
 
 def ser_string(s):
     if len(s) < 253:
-        return chr(len(s)) + s
+        return bytes(chr(len(s)), encoding="utf-8") + s
     elif len(s) < 0x10000:
         return chr(253) + struct.pack("<H", len(s)) + s
     elif len(s) < 0x100000000:
@@ -104,7 +104,7 @@ def deser_uint256(f):
 
 
 def ser_uint256(u):
-    rs = ""
+    rs = b""
     for i in range(8):
         rs += struct.pack("<I", u & 0xFFFFFFFF)
         u >>= 32
@@ -140,17 +140,22 @@ def deser_vector(f, c):
         r.append(t)
     return r
 
+def _header_from_vector(l):
+    return bytes(chr(l), encoding="utf-8")
 
 def ser_vector(l):
-    r = ""
+    print("In ser_vector, l is: %s" % l)
+    r = b""
     if len(l) < 253:
-        r = chr(len(l))
+        print("len(l) is < 253!!!: %s" % len(l))
+        r = _header_from_vector(len(l))
     elif len(l) < 0x10000:
-        r = chr(253) + struct.pack("<H", len(l))
+        print("len(l) is > 253!!!: %s" % len(l))
+        r = _header_from_vector(253) + struct.pack("<H", len(l))
     elif len(l) < 0x100000000:
-        r = chr(254) + struct.pack("<I", len(l))
+        r = _header_from_vector(254) + struct.pack("<I", len(l))
     else:
-        r = chr(255) + struct.pack("<Q", len(l))
+        r = _header_from_vector(255) + struct.pack("<Q", len(l))
     for i in l:
         r += i.serialize()
     return r
@@ -172,7 +177,7 @@ def deser_uint256_vector(f):
 
 
 def ser_uint256_vector(l):
-    r = ""
+    r = b""
     if len(l) < 253:
         r = chr(len(l))
     elif len(l) < 0x10000:
@@ -202,7 +207,7 @@ def deser_string_vector(f):
 
 
 def ser_string_vector(l):
-    r = ""
+    r = b""
     if len(l) < 253:
         r = chr(len(l))
     elif len(l) < 0x10000:
@@ -232,7 +237,7 @@ def deser_int_vector(f):
 
 
 def ser_int_vector(l):
-    r = ""
+    r = b""
     if len(l) < 253:
         r = chr(len(l))
     elif len(l) < 0x10000:
@@ -262,7 +267,7 @@ def deser_char_vector(f):
 
 
 def ser_char_vector(l):
-    r = ""
+    r = b""
     if len(l) < 253:
         r = chr(len(l))
     elif len(l) < 0x10000:
@@ -292,7 +297,7 @@ class CAddress(object):
         self.port = struct.unpack(">H", f.read(2))[0]
 
     def serialize(self):
-        r = ""
+        r = b""
         r += struct.pack("<Q", self.nServices)
         r += self.pchReserved
         r += socket.inet_aton(self.ip)
@@ -319,7 +324,7 @@ class CInv(object):
         self.hash = deser_uint256(f)
 
     def serialize(self):
-        r = ""
+        r = b""
         r += struct.pack("<i", self.type)
         r += ser_uint256(self.hash)
         return r
@@ -339,7 +344,7 @@ class CBlockLocator(object):
         self.vHave = deser_uint256_vector(f)
 
     def serialize(self):
-        r = ""
+        r = b""
         r += struct.pack("<i", self.nVersion)
         r += ser_uint256_vector(self.vHave)
         return r
@@ -390,7 +395,7 @@ class ZCProof(object):
             return chr(G1_PREFIX_MASK | p['y_lsb']) + p['x']
         def ser_g2(self, p):
             return chr(G2_PREFIX_MASK | p['y_gt']) + p['x']
-        r = ""
+        r = b""
         r += ser_g1(self.g_A)
         r += ser_g1(self.g_A_prime)
         r += ser_g2(self.g_B)
@@ -474,7 +479,7 @@ class JSDescription(object):
             self.ciphertexts.append(f.read(ZC_NOTECIPHERTEXT_SIZE))
 
     def serialize(self):
-        r = ""
+        r = b""
         r += struct.pack("<q", self.vpub_old)
         r += struct.pack("<q", self.vpub_new)
         r += ser_uint256(self.anchor)
@@ -507,7 +512,7 @@ class COutPoint(object):
         self.n = struct.unpack("<I", f.read(4))[0]
 
     def serialize(self):
-        r = ""
+        r = b""
         r += ser_uint256(self.hash)
         r += struct.pack("<I", self.n)
         return r
@@ -532,7 +537,7 @@ class CTxIn(object):
         self.nSequence = struct.unpack("<I", f.read(4))[0]
 
     def serialize(self):
-        r = ""
+        r = b""
         r += self.prevout.serialize()
         r += ser_string(self.scriptSig)
         r += struct.pack("<I", self.nSequence)
@@ -554,7 +559,7 @@ class CTxOut(object):
         self.scriptPubKey = deser_string(f)
 
     def serialize(self):
-        r = ""
+        r = b""
         r += struct.pack("<q", self.nValue)
         r += ser_string(self.scriptPubKey)
         return r
@@ -595,6 +600,7 @@ class CTransaction(object):
             self.hash = None
 
     def deserialize(self, f):
+        print("begin deserialize")
         header = struct.unpack("<I", f.read(4))[0]
         self.fOverwintered = bool(header >> 31)
         self.nVersion = header & 0x7FFFFFFF
@@ -608,6 +614,7 @@ class CTransaction(object):
         self.vin = deser_vector(f, CTxIn)
         self.vout = deser_vector(f, CTxOut)
         self.nLockTime = struct.unpack("<I", f.read(4))[0]
+        print("about to check isOverwinterV3: %s" % isOverwinterV3)
         if isOverwinterV3:
             self.nExpiryHeight = struct.unpack("<I", f.read(4))[0]
 
@@ -617,6 +624,7 @@ class CTransaction(object):
                 self.joinSplitPubKey = deser_uint256(f)
                 self.joinSplitSig = f.read(64)
 
+        print("Almost end of deserialize.")
         self.sha256 = None
         self.hash = None
 
@@ -626,7 +634,7 @@ class CTransaction(object):
                           self.nVersionGroupId == OVERWINTER_VERSION_GROUP_ID and
                           self.nVersion == 3)
 
-        r = ""
+        r = b""
         r += struct.pack("<I", header)
         if self.fOverwintered:
             r += struct.pack("<I", self.nVersionGroupId)
@@ -714,7 +722,7 @@ class CBlockHeader(object):
         self.hash = None
 
     def serialize(self):
-        r = ""
+        r = b""
         r += struct.pack("<i", self.nVersion)
         r += ser_uint256(self.hashPrevBlock)
         r += ser_uint256(self.hashMerkleRoot)
@@ -727,7 +735,7 @@ class CBlockHeader(object):
 
     def calc_sha256(self):
         if self.sha256 is None:
-            r = ""
+            r = b""
             r += struct.pack("<i", self.nVersion)
             r += ser_uint256(self.hashPrevBlock)
             r += ser_uint256(self.hashMerkleRoot)
@@ -760,7 +768,7 @@ class CBlock(CBlockHeader):
         self.vtx = deser_vector(f, CTransaction)
 
     def serialize(self):
-        r = ""
+        r = b""
         r += super(CBlock, self).serialize()
         r += ser_vector(self.vtx)
         return r
@@ -855,7 +863,7 @@ class CUnsignedAlert(object):
         self.strReserved = deser_string(f)
 
     def serialize(self):
-        r = ""
+        r = b""
         r += struct.pack("<i", self.nVersion)
         r += struct.pack("<q", self.nRelayUntil)
         r += struct.pack("<q", self.nExpiration)
@@ -888,7 +896,7 @@ class CAlert(object):
         self.vchSig = deser_string(f)
 
     def serialize(self):
-        r = ""
+        r = b""
         r += ser_string(self.vchMsg)
         r += ser_string(self.vchSig)
         return r
@@ -936,7 +944,7 @@ class msg_version(object):
             self.nStartingHeight = None
 
     def serialize(self):
-        r = ""
+        r = b""
         r += struct.pack("<i", self.nVersion)
         r += struct.pack("<Q", self.nServices)
         r += struct.pack("<q", self.nTime)
@@ -997,7 +1005,7 @@ class msg_alert(object):
         self.alert.deserialize(f)
 
     def serialize(self):
-        r = ""
+        r = b""
         r += self.alert.serialize()
         return r
 
@@ -1069,7 +1077,7 @@ class msg_getblocks(object):
         self.hashstop = deser_uint256(f)
 
     def serialize(self):
-        r = ""
+        r = b""
         r += self.locator.serialize()
         r += ser_uint256(self.hashstop)
         return r
@@ -1156,7 +1164,7 @@ class msg_ping(object):
         self.nonce = struct.unpack("<Q", f.read(8))[0]
 
     def serialize(self):
-        r = ""
+        r = b""
         r += struct.pack("<Q", self.nonce)
         return r
 
@@ -1174,7 +1182,7 @@ class msg_pong(object):
         self.nonce = struct.unpack("<Q", f.read(8))[0]
 
     def serialize(self):
-        r = ""
+        r = b""
         r += struct.pack("<Q", self.nonce)
         return r
 
@@ -1215,7 +1223,7 @@ class msg_getheaders(object):
         self.hashstop = deser_uint256(f)
 
     def serialize(self):
-        r = ""
+        r = b""
         r += self.locator.serialize()
         r += ser_uint256(self.hashstop)
         return r

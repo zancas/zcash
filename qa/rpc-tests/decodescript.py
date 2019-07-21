@@ -167,39 +167,28 @@ class DecodeScriptTest(BitcoinTestFramework):
 
         # make sure that the sighash decodes come out correctly for a more complex / lesser used case.
         txSave.vin[0].scriptSig = unhexlify(push_signature_2)
-        #import pdb; pdb.set_trace()
-        serialized = txSave.serialize()
-        rpc_result = self.nodes[0].decoderawtransaction(hexlify(serialized))
+        serialized_p2 = txSave.serialize()
+        hexed_pushsig_2 = hexlify(serialized_p2)
+        rpc_result = self.nodes[0].decoderawtransaction(hexed_pushsig_2)
         assert_equal(str(signature_2_sighash_decoded)[2:].strip("'"), rpc_result['vin'][0]['scriptSig']['asm'])
 
         # 2) multisig scriptSig
-        print("push_signature: %s" % push_signature)
-        print("push_signature_2: %s" % push_signature_2)
-        #txSave2 = CTransaction()
+        txSave2 = CTransaction()
         txSave.vin[0].scriptSig = unhexlify(b'00' + push_signature + push_signature_2)
-        print("txSave.vin[0].scriptSig: %s" % txSave.vin[0].scriptSig)
-        #pdb.set_trace()
         serialized = txSave.serialize()
         hexed = hexlify(serialized)
-        print()
-        print()
-        print()
-        print("hexed is**********************************************************: %s" % hexed)
-        print()
-        print()
         rpc_result = self.nodes[0].decoderawtransaction(hexed)
-        assert_equal('0 ' + signature_sighash_decoded + ' ' + signature_2_sighash_decoded, rpc_result['vin'][0]['scriptSig']['asm'])
+        assert_equal(str(b'0 ' + signature_sighash_decoded + b' ' + signature_2_sighash_decoded)[2:].strip("'"), rpc_result['vin'][0]['scriptSig']['asm'])
 
         # 3) test a scriptSig that contains more than push operations.
         # in fact, it contains an OP_RETURN with data specially crafted to cause improper decode if the code does not catch it.
         txSave.vin[0].scriptSig = unhexlify('6a143011020701010101010101020601010101010101')
         rpc_result = self.nodes[0].decoderawtransaction(hexlify(txSave.serialize()))
-        print((hexlify('636174')))
         assert_equal('OP_RETURN 3011020701010101010101020601010101010101', rpc_result['vin'][0]['scriptSig']['asm'])
 
     def run_test(self):
-        #self.decodescript_script_sig()
-        #self.decodescript_script_pub_key()
+        self.decodescript_script_sig()
+        self.decodescript_script_pub_key()
         self.decoderawtransaction_asm_sighashtype()
 
 if __name__ == '__main__':

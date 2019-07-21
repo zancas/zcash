@@ -127,9 +127,6 @@ class AuthServiceProxy():
                 raise
 
     def __call__(self, *args):
-        import logging
-        logging.basicConfig(level=logging.DEBUG)
-
         AuthServiceProxy.__id_count += 1
 
         log.debug("-%s-> %s %s"%(AuthServiceProxy.__id_count, self.__service_name,
@@ -159,7 +156,6 @@ class AuthServiceProxy():
                 'code': -342, 'message': 'missing HTTP response from server'})
 
         responsedata = http_response.read().decode('utf8')
-        print(responsedata)
         response = json.loads(responsedata, parse_float=decimal.Decimal)
         if "error" in response and response["error"] is None:
             log.debug("<-%s- %s"%(response["id"], json.dumps(response["result"])))

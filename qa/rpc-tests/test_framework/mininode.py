@@ -87,7 +87,9 @@ def deser_string(f):
 
 def ser_string(s):
     if len(s) < 253:
-        return bytes(chr(len(s)), encoding="utf-8") + s
+        #from binascii import hexlify as hl
+        #import pdb; pdb.set_trace()
+        return bytes([len(s)]) + s
     elif len(s) < 0x10000:
         return chr(253) + struct.pack("<H", len(s)) + s
     elif len(s) < 0x100000000:
@@ -144,13 +146,10 @@ def _header_from_vector(l):
     return bytes(chr(l), encoding="utf-8")
 
 def ser_vector(l):
-    print("In ser_vector, l is: %s" % l)
     r = b""
     if len(l) < 253:
-        print("len(l) is < 253!!!: %s" % len(l))
         r = _header_from_vector(len(l))
     elif len(l) < 0x10000:
-        print("len(l) is > 253!!!: %s" % len(l))
         r = _header_from_vector(253) + struct.pack("<H", len(l))
     elif len(l) < 0x100000000:
         r = _header_from_vector(254) + struct.pack("<I", len(l))
@@ -600,7 +599,6 @@ class CTransaction(object):
             self.hash = None
 
     def deserialize(self, f):
-        print("begin deserialize")
         header = struct.unpack("<I", f.read(4))[0]
         self.fOverwintered = bool(header >> 31)
         self.nVersion = header & 0x7FFFFFFF
@@ -614,7 +612,6 @@ class CTransaction(object):
         self.vin = deser_vector(f, CTxIn)
         self.vout = deser_vector(f, CTxOut)
         self.nLockTime = struct.unpack("<I", f.read(4))[0]
-        print("about to check isOverwinterV3: %s" % isOverwinterV3)
         if isOverwinterV3:
             self.nExpiryHeight = struct.unpack("<I", f.read(4))[0]
 
@@ -624,7 +621,6 @@ class CTransaction(object):
                 self.joinSplitPubKey = deser_uint256(f)
                 self.joinSplitSig = f.read(64)
 
-        print("Almost end of deserialize.")
         self.sha256 = None
         self.hash = None
 

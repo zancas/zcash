@@ -27,8 +27,7 @@ debian-build:
     dockerfile: ${CI_BUILDS_DIR}/${CI_JOB_NAME}
   script:
       - echo ${IMAGE_BASE}
-      - docker build -t ${IMAGE_BASE}_${CI_JOB_NAME}:${CI_COMMIT_SHA} \
-            -f ${CI_BUILDS_DIR}/contrib/ 
+      - docker build -t ${IMAGE_BASE}_${CI_JOB_NAME}:${CI_COMMIT_SHA} -f ${CI_BUILDS_DIR}/contrib/ 
 
 
 test1:

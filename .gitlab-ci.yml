@@ -37,4 +37,5 @@ test1:
   tags:
     - debian
   script:
+      - echo $DEBIANIMAGETAG
       - docker run $DEBIANIMAGETAG ./zcash/qa/zcash/full_test_suite.py

@@ -19,5 +19,5 @@ RUN     apt update && \
                        automake              
 RUN     git clone https://github.com/zcash/zcash.git
 WORKDIR /zcash
-RUN     ./zcutil/fetch-param.sh --testnet
+RUN     ./zcutil/fetch-params.sh --testnet
 RUN     ./zcutil/build.sh -j$(nproc)

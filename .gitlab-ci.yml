@@ -23,17 +23,19 @@ variables:
 
 debianbuild:
   stage: build
+  tags:
+    - debian
   variables:
     Dockerfile: $BUILD_CONFIGS_PATH/$CI_JOB_NAME/Dockerfile
     imagetag: $CI_PROJECT_PATH_SLUG-$CI_JOB_NAME:$CI_COMMIT_SHA 
   script:
-      - echo $IMAGE_BASE
-      - echo $CI_JOB_NAME
       - docker build -t $imagetag -f $Dockerfile .
 
 
 test1:
   stage: test
+  tags:
+    - debian
   script:
       - docker run registry.gitlab.com/zingo-labs/zcash/debian_latest_build:latest ls -l ./
       - docker run registry.gitlab.com/zingo-labs/zcash/debian_latest_build:latest ./zcash/qa/zcash/full_test_suite.py

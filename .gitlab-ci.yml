@@ -28,7 +28,7 @@ debianbuild:
   script:
       - echo $IMAGE_BASE
       - echo $CI_JOB_NAME
-      - docker build -t $IMAGE_BASE-$CI_JOB_NAME:$CI_COMMIT_SHA -f $Dockerfile
+      - docker build -t $CI_PROJECT_PATH_SLUG-$CI_JOB_NAME:$CI_COMMIT_SHA -f $Dockerfile
 
 
 test1:

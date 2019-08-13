@@ -68,13 +68,13 @@ class BitcoinTestFramework(object):
 
     def sync_all(self):
         if self.is_network_split:
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
-            print("is_network_split is %s!!!" %s self.is_network_split)
             sync_blocks(self.nodes[:2])
             sync_blocks(self.nodes[2:])
             sync_mempools(self.nodes[:2])
             sync_mempools(self.nodes[2:])
         else:
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
+            print("is_network_split is %s!!!" %s self.is_network_split)
             sync_blocks(self.nodes)
             sync_mempools(self.nodes)
 

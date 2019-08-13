@@ -21,4 +21,4 @@ RUN     git clone https://github.com/zcash/zcash.git
 WORKDIR /zcash
 RUN     ./zcutil/fetch-params.sh --testnet
 RUN     ./zcutil/build.sh -j$(nproc)
-RUN     touch /root/.zcash/zcash.conf
+RUN     mkdir -p /root/.zcash/ && touch /root/.zcash/zcash.conf

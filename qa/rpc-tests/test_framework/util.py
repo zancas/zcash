@@ -17,10 +17,12 @@ from decimal import Decimal, ROUND_DOWN
 import json
 import random
 import shutil
+import socket
 import subprocess
 import time
 import re
 
+HOSTIP = socket.gethostbyname(socket.gethostname())
 from authproxy import AuthServiceProxy
 
 def p2p_port(n):
@@ -83,6 +85,7 @@ def initialize_datadir(dirname, n):
         f.write("port="+str(p2p_port(n))+"\n")
         f.write("rpcport="+str(rpc_port(n))+"\n")
         f.write("listenonion=0\n")
+        f.write("rpcbind=%s"%HOSTIP)
     return datadir
 
 def initialize_chain(test_dir):

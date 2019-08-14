@@ -17,10 +17,14 @@ RUN     apt update && \
                        wget \
                        curl \
                        bsdmainutils \
-                       automake              
+                       automake \
+                       vim \
+                       psmisc \
+                       apt-file \
+                       netcat
 RUN     pip install pyblake2 pyzmq pyutil python-qpid-proton simplejson
 RUN     git clone https://github.com/zcash/zcash.git
 WORKDIR /zcash
 RUN     ./zcutil/fetch-params.sh --testnet
 RUN     ./zcutil/build.sh -j$(nproc)
-RUN     mkdir -p /root/.zcash/ && touch /root/.zcash/zcash.conf
+RUN     mkdir /root/.zcash/ && touch /root/.zcash/zcash.conf

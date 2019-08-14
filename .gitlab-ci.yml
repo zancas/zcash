@@ -38,4 +38,4 @@ test1:
     - debian
   script:
       - echo $DEBIANIMAGETAG
-      - docker run -P $DEBIANIMAGETAG /zcash/qa/pull-tester/rpc-tests.sh paymentdisclosure.py
+      - docker run $DEBIANIMAGETAG /zcash/qa/pull-tester/rpc-tests.sh paymentdisclosure.py

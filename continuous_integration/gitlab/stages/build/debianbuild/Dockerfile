@@ -12,11 +12,13 @@ RUN     apt update && \
                        git \
                        python \
                        python-zmq \
+                       python-pip \
                        zlib1g-dev \
                        wget \
                        curl \
                        bsdmainutils \
                        automake              
+RUN     pip install pyblake2 pyzmq pyutil python-qpid-proton simplejson
 RUN     git clone https://github.com/zcash/zcash.git
 WORKDIR /zcash
 RUN     ./zcutil/fetch-params.sh --testnet

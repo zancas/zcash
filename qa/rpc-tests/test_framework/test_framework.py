@@ -74,7 +74,7 @@ class BitcoinTestFramework(object):
             sync_mempools(self.nodes[2:])
         else:
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
-            print("is_network_split is %s!!!" %s self.is_network_split)
+            print("is_network_split is %s!!!" % self.is_network_split)
             sync_blocks(self.nodes)
             sync_mempools(self.nodes)
 

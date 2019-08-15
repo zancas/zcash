@@ -31,7 +31,7 @@ debianbuild:
   script:
       - docker build -t $DEBIANIMAGETAG-base -f $Dockerfile .
       - docker build --no-cache -t $DEBIANIMAGETAG -f $Dockerfile.newcommit .
-      - docker login registry.gitlab.com
+      #- docker login registry.gitlab.com
       - docker push $IMAGE_BASE/$DEBIANIMAGETAG
 
 

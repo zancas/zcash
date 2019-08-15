@@ -1,0 +1,2 @@
+FROM    0003d674f66e
+RUN     make -j$(nproc)

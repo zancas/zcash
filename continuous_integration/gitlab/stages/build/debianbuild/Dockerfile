@@ -28,3 +28,4 @@ WORKDIR /zcash
 RUN     ./zcutil/fetch-params.sh --testnet
 RUN     ./zcutil/build.sh -j$(nproc)
 RUN     mkdir /root/.zcash/ && touch /root/.zcash/zcash.conf
+RUN     git remote add zingolabs https://gitlab.com/ZingO-Labs/zcash.git

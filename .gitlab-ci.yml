@@ -29,6 +29,7 @@ debian:
   variables:
     Dockerfile: $BUILD_CONFIGS_PATH/$CI_JOB_NAME/Dockerfile
   script:
+      - echo $DEBIANIMAGETAG
       - docker build -t $DEBIANIMAGETAG -f $Dockerfile .
       - docker build --no-cache -t $DEBIANTESTTAG -f $Dockerfile.newcommit .
 

@@ -1,2 +1,2 @@
-FROM    0e250d2b84c8
+  
 RUN     git pull --verbose zingolabs master:master && make -j$(nproc)

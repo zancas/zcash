@@ -29,7 +29,6 @@ debian:
     - debian
   script:
       - export DockerfilePath=${BUILD_CONFIGS_PATH}/${CI_JOB_NAME}/Dockerfile
-      - echo ${DEBIANIMAGETAG}
       - sed -i s/==FROMIMAGE==/${DEBIANIMAGETAG}/ ${DockerfilePath}.newcommit
       - docker build -t $DEBIANIMAGETAG -f ${DockerfilePath} .
       - docker build --no-cache -t $DEBIANTESTTAG -f ${DockerfilePath}.newcommit .
@@ -40,5 +39,4 @@ test1:
   tags:
     - debian
   script:
-      - echo $DEBIANIMAGETAG
-      - docker run $DEBIANTESTTAG /zcash/qa/pull-tester/rpc-tests.sh rest.py
+      - docker run $DEBIANTESTTAG /zcash/qa/zcash/full_test_suite.py

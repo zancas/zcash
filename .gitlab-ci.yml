@@ -29,7 +29,7 @@ debian:
     - debian
   script:
       - export DockerfilePath=${BUILD_CONFIGS_PATH}/${CI_JOB_NAME}/Dockerfile
-      - sed -i s/<<FROMIMAGE>>/${DEBIANIMAGETAG}/ ${DockerfilePath}.newcommit
+      - sed -i s/==FROMIMAGE==/${DEBIANIMAGETAG}/ ${DockerfilePath}.newcommit
       - docker build -t $DEBIANIMAGETAG -f ${DockerfilePath} .
       - docker build --no-cache -t $DEBIANTESTTAG -f ${DockerfilePath}.newcommit .
 

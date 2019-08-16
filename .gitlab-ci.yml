@@ -31,7 +31,7 @@ debian:
       - export DockerfilePath=${BUILD_CONFIGS_PATH}/${CI_JOB_NAME}/Dockerfile
       - echo $FOO
       - echo $DEBIANIMAGETAG
-      - echo $Dockerfile
+      - echo ${DockerfilePath}
       - docker build -t $DEBIANIMAGETAG -f ${DockerfilePath} .
       - docker build --no-cache -t $DEBIANTESTTAG -f ${DockerfilePath}.newcommit .
 

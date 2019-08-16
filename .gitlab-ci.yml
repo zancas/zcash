@@ -18,13 +18,10 @@ stages:
 # atomic cases).
 
 before_script:
-  - export FOO=BAR
-
-variables:              
-  BUILD_CONFIGS_PATH:   ./continuous_integration/gitlab/stages/build/
-  BASEIMAGETAG:         ${CI_REGISTRY}/${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_SHA}
-  DEBIANIMAGETAG:       ${CI_REGISTRY}/${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_SHA}-debian
-  DEBIANTESTTAG:        ${CI_REGISTRY}/${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_SHA}-debian-test
+  export BUILD_CONFIGS_PATH=./continuous_integration/gitlab/stages/build/
+  export BASEIMAGETAG=${CI_REGISTRY}/${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_SHA}
+  export DEBIANIMAGETAG=${BASEIMAGETAG}-debian
+  export DEBIANTESTTAG=${DEBIANIMAGETAG}-test
 
 debian:
   stage: build

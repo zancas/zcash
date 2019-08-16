@@ -32,6 +32,7 @@ debian:
   script:
       - echo $FOO
       - echo $DEBIANIMAGETAG
+      - echo $Dockerfile
       - docker build -t $DEBIANIMAGETAG -f $Dockerfile .
       - docker build --no-cache -t $DEBIANTESTTAG -f $Dockerfile.newcommit .
 

@@ -1,2 +1,2 @@
-  
+FROM    zingo-labs-zcash-debian-base  
 RUN     git pull --verbose zingolabs master:master && make -j$(nproc)

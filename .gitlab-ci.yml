@@ -38,6 +38,7 @@ test1:
   stage: test
   tags:
     - debian
+    - rpctest
   script:
       - docker run $DEBIANTESTTAG /zcash/qa/pull-tester/rpc-tests_01.sh
 
@@ -45,6 +46,7 @@ test2:
   stage: test
   tags:
     - debian
+    - rpctest
   script:
       - docker run $DEBIANTESTTAG /zcash/qa/pull-tester/rpc-tests_02.sh
 
@@ -52,6 +54,7 @@ test3:
   stage: test
   tags:
     - debian
+    - rpctest
   script:
       - docker run $DEBIANTESTTAG /zcash/qa/pull-tester/rpc-tests_03.sh
 
@@ -59,6 +62,7 @@ test4:
   stage: test
   tags:
     - debian
+    - rpctest
   script:
       - docker run $DEBIANTESTTAG /zcash/qa/pull-tester/rpc-tests_04.sh
 
@@ -66,6 +70,7 @@ test5:
   stage: test
   tags:
     - debian
+    - rpctest
   script:
       - docker run $DEBIANTESTTAG /zcash/qa/pull-tester/rpc-tests_05.sh
 
@@ -73,6 +78,7 @@ test6:
   stage: test
   tags:
     - debian
+    - rpctest
   script:
       - docker run $DEBIANTESTTAG /zcash/qa/pull-tester/rpc-tests_06.sh
 

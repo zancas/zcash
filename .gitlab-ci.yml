@@ -1,0 +1,42 @@
+image: docker:stable
+
+stages:
+  - build
+  - test
+
+# To set variables:
+# Our organizing principles are:
+# (0) the value of a variable should be easily understood by reading this assignment section
+# (1) where possible more composed variables should be assembled by concatenation of their atoms
+#
+# The rationale for (1) is that, more atomic variables are less likely to change, and are more
+# likely to be more used (this is because less atomic variables are likely just compositions of
+# atomic variables); AND by explicitly being composed in this section their values are more readily
+# understood (read) in this context.
+#
+# where possible add a comment with an example on the variable binding line (especially in more
+# atomic cases).
+
+before_script:
+  - export BUILD_CONFIGS_PATH=./continuous_integration/gitlab/stages/build/
+  - export BASEIMAGETAG=${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_SHA}
+  - export DEBIANIMAGETAG=${BASEIMAGETAG}-debian
+  - export DEBIANTESTTAG=${DEBIANIMAGETAG}-test
+
+debian:
+  stage: build
+  tags:
+    - debian
+  script:
+      - export DockerfilePath=${BUILD_CONFIGS_PATH}/${CI_JOB_NAME}/Dockerfile
+      - sed -i s/==FROMIMAGE==/${DEBIANIMAGETAG}/ ${DockerfilePath}.newcommit
+      - docker build -t $DEBIANIMAGETAG -f ${DockerfilePath} .
+      - docker build --no-cache -t $DEBIANTESTTAG -f ${DockerfilePath}.newcommit .
+
+
+test1:
+  stage: test
+  tags:
+    - debian
+  script:
+      - docker run $DEBIANTESTTAG /zcash/qa/zcash/full_test_suite.py

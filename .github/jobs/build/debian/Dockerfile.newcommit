@@ -1,0 +1,2 @@
+FROM    ==FROMIMAGE==
+RUN     git pull --verbose master:master && make -j$(nproc)

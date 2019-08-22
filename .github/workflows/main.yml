@@ -14,8 +14,6 @@ jobs:
       run: |
         sudo apt-get update -y
         sudo apt-get install build-essential pkg-config libc6-dev m4 g++-multilib autoconf libtool ncurses-dev unzip git python3 python3-zmq zlib1g-dev wget curl bsdmainutils automake python3-pip python3-setuptools -y
-        #sudo pip install pyblake2 pyflakes
-        #sudo pip3 install pyutil pyblake2 pyflakes simplejson
         sudo pip3 install pyflakes pyblake2 pyzmq pyutil python-qpid-proton simplejson
     #- name: pyflakes
     #  run: pyflakes qa src zcutil        
@@ -42,9 +40,4 @@ jobs:
     - name: univalue
       run: ./qa/zcash/full_test_suite.py univalue
     - name: rpc
-      run: ./qa/zcash/full_test_suite.py rpc  
-
-# TODO ARM cross-compile
-# TODO MacOS native build
-# TODO Windows cross-compile
-# TODO Run tests on native platforms
+      run: ./qa/zcash/full_test_suite.py rpc

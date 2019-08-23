@@ -14,6 +14,8 @@ jobs:
     #  run: pyflakes qa src zcutil        
     - name: echo_github_vars
       run: echo $HOME $GITHUB_WORKFLOW $GITHUB_ACTION $GITHUB_ACTOR $GITHUB_REPOSITORY $GITHUB_EVENT_NAME $GITHUB_EVENT_PATH $GITHUB_WORKSPACE $GITHUB_SHA $GITHUB_REF $GITHUB_TOKEN
+    - name: ls_space
+      run: ls -la $GITHUB_WORKSPACE
     - name: list-stages
       run: ./qa/zcash/full_test_suite.py --list-stages
     - name: btest

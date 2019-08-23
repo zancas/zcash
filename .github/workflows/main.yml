@@ -2,6 +2,9 @@ name: CI
 
 on: [push, pull_request]
 
+action "run_test" {
+}
+
 jobs:
   linux_x64:
 
@@ -19,20 +22,20 @@ jobs:
     - name: list-stages
       run: docker run zingolabs/zcashdebian:87c1df780db87a9b8d44ea7b0d1a30ee4f47f352 ./qa/zcash/full_test_suite.py \-\-list-stages
     - name: btest
-      run: ./qa/zcash/full_test_suite.py btest
+      run: docker run zingolabs/zcashdebian:87c1df780db87a9b8d44ea7b0d1a30ee4f47f352 ./qa/zcash/full_test_suite.py btest
     - name: gtest
-      run: ./qa/zcash/full_test_suite.py gtest
+      run: docker run zingolabs/zcashdebian:87c1df780db87a9b8d44ea7b0d1a30ee4f47f352 ./qa/zcash/full_test_suite.py gtest
     - name: sec-hard
-      run: ./qa/zcash/full_test_suite.py sec-hard
+      run: docker run zingolabs/zcashdebian:87c1df780db87a9b8d44ea7b0d1a30ee4f47f352 ./qa/zcash/full_test_suite.py sec-hard
     - name: no-dot-so
-      run: ./qa/zcash/full_test_suite.py no-dot-so
+      run: docker run zingolabs/zcashdebian:87c1df780db87a9b8d44ea7b0d1a30ee4f47f352 ./qa/zcash/full_test_suite.py no-dot-so
     - name: util-test
-      run: ./qa/zcash/full_test_suite.py util-test
+      run: docker run zingolabs/zcashdebian:87c1df780db87a9b8d44ea7b0d1a30ee4f47f352 ./qa/zcash/full_test_suite.py util-test
     - name: secp256k1
-      run: ./qa/zcash/full_test_suite.py secp256k1
+      run: docker run zingolabs/zcashdebian:87c1df780db87a9b8d44ea7b0d1a30ee4f47f352 ./qa/zcash/full_test_suite.py secp256k1
     - name: libsnark
-      run: ./qa/zcash/full_test_suite.py libsnark
+      run: docker run zingolabs/zcashdebian:87c1df780db87a9b8d44ea7b0d1a30ee4f47f352 ./qa/zcash/full_test_suite.py libsnark
     - name: univalue
-      run: ./qa/zcash/full_test_suite.py univalue
+      run: docker run zingolabs/zcashdebian:87c1df780db87a9b8d44ea7b0d1a30ee4f47f352 ./qa/zcash/full_test_suite.py univalue
     - name: rpc
-      run: ./qa/zcash/full_test_suite.py rpc
+      run: docker run zingolabs/zcashdebian:87c1df780db87a9b8d44ea7b0d1a30ee4f47f352 ./qa/zcash/full_test_suite.py rpc

@@ -51,9 +51,39 @@ jobs:
     - uses: docker://zingolabs/zcashdebian:latest
     - name: univalue
       run: docker run zingolabs/zcashdebian:latest ./qa/zcash/full_test_suite.py univalue
-  linux_x64_rpc:
+  linux_x64_rpc1:
     runs-on: ubuntu-16.04
     steps:
     - uses: docker://zingolabs/zcashdebian:latest
-    - name: rpc
-      run: docker run zingolabs/zcashdebian:latest ./qa/zcash/full_test_suite.py rpc
+    - name: rpc1
+      run: docker run zingolabs/zcashdebian:latest ./qa/zcash/full_test_suite.py rpc1
+  linux_x64_rpc2:
+    runs-on: ubuntu-16.04
+    steps:
+    - uses: docker://zingolabs/zcashdebian:latest
+    - name: rpc2
+      run: docker run zingolabs/zcashdebian:latest ./qa/zcash/full_test_suite.py rpc2
+  linux_x64_rpc3:
+    runs-on: ubuntu-16.04
+    steps:
+    - uses: docker://zingolabs/zcashdebian:latest
+    - name: rpc3
+      run: docker run zingolabs/zcashdebian:latest ./qa/zcash/full_test_suite.py rpc3
+  linux_x64_rpc4:
+    runs-on: ubuntu-16.04
+    steps:
+    - uses: docker://zingolabs/zcashdebian:latest
+    - name: rpc4
+      run: docker run zingolabs/zcashdebian:latest ./qa/zcash/full_test_suite.py rpc4
+  linux_x64_rpc5:
+    runs-on: ubuntu-16.04
+    steps:
+    - uses: docker://zingolabs/zcashdebian:latest
+    - name: rpc5
+      run: docker run zingolabs/zcashdebian:latest ./qa/zcash/full_test_suite.py rpc5
+  linux_x64_rpc6:
+    runs-on: ubuntu-16.04
+    steps:
+    - uses: docker://zingolabs/zcashdebian:latest
+    - name: rpc6
+      run: docker run zingolabs/zcashdebian:latest ./qa/zcash/full_test_suite.py rpc6

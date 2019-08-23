@@ -13,7 +13,8 @@ jobs:
     #- name: pyflakes
     #  run: pyflakes qa src zcutil        
     - name: build
-      run: ./make
+      run: pwd
+      run: ls -la
     - name: list-stages
       run: ./qa/zcash/full_test_suite.py --list-stages
     - name: btest

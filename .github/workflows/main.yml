@@ -2,9 +2,6 @@ name: CI
 
 on: [push, pull_request]
 
-action "run_test" {
-}
-
 jobs:
   linux_x64:
 

@@ -12,8 +12,9 @@ jobs:
     - uses: docker://zingolabs/zcashdebian:87c1df780db87a9b8d44ea7b0d1a30ee4f47f352
     #- name: pyflakes
     #  run: pyflakes qa src zcutil        
-    - name: build
+    - name: query_dir
       run: pwd
+    - name: ls_dir
       run: ls -la
     - name: list-stages
       run: ./qa/zcash/full_test_suite.py --list-stages

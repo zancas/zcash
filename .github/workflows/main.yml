@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-16.04
     steps:
     - name: build
+      uses: actions/checkout@${{ github.sha }}
       run: docker build --build-arg TARGET_SHA=${{ github.sha }} -t zingolabs/zcashdebian -f .github/jobs/build/debian/Dockerfile.base .
   linux_x64_btest:
     runs-on: ubuntu-16.04

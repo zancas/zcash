@@ -33,4 +33,5 @@ RUN     ln -sf /usr/bin/python3 /usr/bin/python && \
         ln -sf /usr/bin/pip3 /usr/bin/pip
 ARG     TARGET_SHA
 COPY    .  .
-RUN     git checkout $TARGET_SHA && make
+RUN     echo $TARGET_SHA
+RUN     ls -la && git checkout $TARGET_SHA

@@ -1,4 +1,4 @@
-ARG     TARGET_SHA
 FROM    zingolabs/zcashdebian:latest
 COPY    .  .
+RUN     $TARGET_SHA
 RUN     git checkout $TARGET_SHA && make

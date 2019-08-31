@@ -15,4 +15,3 @@ jobs:
        with:
          entrypoint: /bin/echo
          args: ${{ github.sha }} is the sha.
-       run: docker run

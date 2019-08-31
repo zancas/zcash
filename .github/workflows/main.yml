@@ -8,10 +8,8 @@ jobs:
     steps:
      - name: checkout
        uses: actions/checkout@master
-     - name: look and see
-       run: pwd && ls -la .github/actions/
      - name: build
-       uses: ./.github/actions/build
+       uses: .github/actions/build
        with:
          entrypoint: /bin/echo
          args: ${{ github.sha }} is the sha.

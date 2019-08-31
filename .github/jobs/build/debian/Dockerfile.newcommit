@@ -3,4 +3,4 @@ WORKDIR /zcash
 COPY    .  .
 ARG     TARGET_SHA
 RUN     git checkout $TARGET_SHA
-RUN     make
+RUN     ./zcutil/build.sh -j$(nproc)

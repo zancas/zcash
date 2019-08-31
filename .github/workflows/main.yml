@@ -27,7 +27,7 @@ jobs:
      - name: look
        run: echo ${HOME} && ls -la ${HOME}
      - name: load_build_image
-       run: docker load ${HOME}/zingolabs_zcashdebian.tar
+       run: docker load -i ${HOME}/zingolabs_zcashdebian.tar
      - name: run_image
        run: docker run zingolabs_zcashdebian
   one:

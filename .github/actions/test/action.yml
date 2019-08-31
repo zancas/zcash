@@ -1,5 +1,5 @@
-name: 'Debian Build'
-description: 'Build a debian docker image from the feature branch'
+name: 'Debian Tester'
+description: 'Test functionality against a debian build'
 author: 'zancas'
 runs: 
   using: 'docker'

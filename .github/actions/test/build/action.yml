@@ -1,6 +1,0 @@
-name: 'Debian Tester'
-description: 'Test functionality against a debian build'
-author: 'zancas'
-runs: 
-  using: 'docker'
-  image: 'Dockerfile'

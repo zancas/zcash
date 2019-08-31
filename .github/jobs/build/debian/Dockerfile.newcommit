@@ -1,4 +1,2 @@
-FROM    zingolabs/zcashdebian:latest
-WORKDIR /zcash
-COPY    .  .
-RUN     ./zcutil/build.sh -j$(nproc)
+FROM    f26939cc87ef
+RUN     ls -la

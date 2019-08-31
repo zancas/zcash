@@ -12,13 +12,14 @@ jobs:
        uses: ./.github/actions/test
        with:
          entrypoint: /bin/echo
-  linux_x64_btest:
-    runs-on: ubuntu-16.04
-    needs: linux_x64_build
-    steps:
-     - name: checkout
-       uses: actions/checkout@master
-     - name: btest
-       uses: ./.github/actions/test
-       with:
-         args: "btest"
+         args: "Build complete"
+#  linux_x64_btest:
+#    runs-on: ubuntu-16.04
+#    needs: linux_x64_build
+#    steps:
+#     - name: checkout
+#       uses: actions/checkout@master
+#     - name: btest
+#       uses: ./.github/actions/test
+#       with:
+#         args: "btest"

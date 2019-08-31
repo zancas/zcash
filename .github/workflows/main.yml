@@ -10,6 +10,8 @@ jobs:
        uses: actions/checkout@master
      - name: build
        uses: ./.github/actions/test
+       with:
+         entrypoint: /bin/echo
   linux_x64_btest:
     runs-on: ubuntu-16.04
     needs: linux_x64_build

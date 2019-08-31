@@ -11,4 +11,7 @@ jobs:
      - name: look and see
        run: pwd && ls -la
      - name: build
-       uses: ./.github/build
+       uses: ./.github/actions/build
+       with:
+         entrypoint: /bin/echo
+         args: ${{ github.sha }} is the sha.

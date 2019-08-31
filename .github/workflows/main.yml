@@ -8,5 +8,7 @@ jobs:
     steps:
      - name: checkout
        uses: actions/checkout@master
+     - name: look and see
+       run: pwd && ls -la
      - name: build
        uses: ./.github/build

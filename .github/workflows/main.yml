@@ -9,7 +9,7 @@ jobs:
      - name: checkout
        uses: actions/checkout@master
      - name: look and see
-       run: pwd && ls -la
+       run: pwd && ls -la .github/actions/
      - name: build
        uses: ./.github/actions/build
        with:

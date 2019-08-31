@@ -1,9 +1,9 @@
-workflow "CI" {
+workflow "buildimage" {
     on = "pull_request"
-    resolves = "HYPOTHESISTEST" 
+    resolves = "build"
 }
 
-action "HYPOTHESISTEST" {
-    uses = "docker://debian:latest"
+action "build" {
+    uses = "./.github/build"
 }
 

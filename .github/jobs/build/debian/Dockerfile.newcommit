@@ -1,4 +1,5 @@
 FROM    zingolabs/zcashdebian:latest
+WORKDIR /zcash
 COPY    .  .
 ARG     TARGET_SHA
 RUN     git checkout $TARGET_SHA

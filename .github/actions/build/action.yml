@@ -1,6 +1,0 @@
-name: 'Debian Build'
-description: 'Build a debian docker image from the feature branch'
-author: 'zancas'
-runs: 
-  using: 'docker'
-  image: 'Dockerfile'

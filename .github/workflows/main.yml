@@ -13,10 +13,9 @@ jobs:
      - name: sanity_check_docker_images
        run: docker images
      - name: save_build_image
-       working-directory: ${HOME}
-       run: docker save -o ./zingolabs_zcashdebian.tar zingolabs/zcashdebian
+       run: docker save -o ${GITHUB_WORKSPACE}/zingolabs_zcashdebian.tar zingolabs/zcashdebian
      - name: look
-       run: echo ${HOME} && ls -la ${HOME}
+       run: echo ${GITHUB_WORKSPACE} && ls -la ${GITHUB_WORKSPACE}
   linux_x64_btest:
     runs-on: ubuntu-16.04
     needs: linux_x64_build
@@ -26,10 +25,9 @@ jobs:
      - name: sanity_check_docker_images
        run: docker images
      - name: look
-       run: echo ${HOME} && ls -la ${HOME}
+       run: echo ${GITHUB_WORKSPACE} && ls -la ${GITHUB_WORKSPACE}
      - name: load_build_image
-       working-directory: ${HOME}
-       run: docker load -i ./zingolabs_zcashdebian.tar
+       run: docker load -i ${GITHUB_WORKSPACE}/zingolabs_zcashdebian.tar
      - name: run_image
        run: docker run zingolabs_zcashdebian
   one:

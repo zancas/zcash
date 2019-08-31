@@ -9,11 +9,12 @@ jobs:
      - name: checkout
        uses: actions/checkout@master
      - name: build
-       uses: ./.github/actions/build
+       uses: ./.github/actions/test
   linux_x64_btest:
     runs-on: ubuntu-16.04
     needs: linux_x64_build
     steps:
-     - uses: docker://zingolabs/zcashdebian:latest
      - name: btest
-       run: docker run zingolabs/zcashdebian:latest ./qa/zcash/full_test_suite.py btest
+       uses: ./.github/actions/test
+       with:
+         args: "btest"

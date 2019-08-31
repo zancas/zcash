@@ -9,7 +9,9 @@ jobs:
      - name: checkout
        uses: actions/checkout@master
      - name: build
-       run: docker build --build-arg TARGET_SHA=${{ github.sha }} -t spammmmmm -f .github/jobs/build/debian/Dockerfile.newcommit .
+       run: docker build -t zingolabs/zcashdebian -f .github/jobs/build/debian/Dockerfile.newcommit .
+     - name: extract_build_artifacts
+       run: docker create 
   linux_x64_btest:
     runs-on: ubuntu-16.04
     needs: linux_x64_build

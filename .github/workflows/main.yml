@@ -14,7 +14,7 @@ jobs:
        run: docker images
      - name: save_build_image
        working-directory: ${HOME}
-       run: docker save -o zingolabs_zcashdebian.tar zingolabs/zcashdebian
+       run: docker save -o ./zingolabs_zcashdebian.tar zingolabs/zcashdebian
      - name: look
        run: echo ${HOME} && ls -la ${HOME}
   linux_x64_btest:
@@ -29,7 +29,7 @@ jobs:
        run: echo ${HOME} && ls -la ${HOME}
      - name: load_build_image
        working-directory: ${HOME}
-       run: docker load -i zingolabs_zcashdebian.tar
+       run: docker load -i ./zingolabs_zcashdebian.tar
      - name: run_image
        run: docker run zingolabs_zcashdebian
   one:

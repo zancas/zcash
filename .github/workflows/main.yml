@@ -12,10 +12,10 @@ jobs:
        run: docker build -t zingolabs/zcashdebian -f .github/jobs/build/debian/Dockerfile.newcommit .
      - name: sanity_check_docker_images
        run: docker images
-     - name: save_build_image
-       run: docker save -o ${GITHUB_WORKFLOW}/zingolabs_zcashdebian.tar zingolabs/zcashdebian
      - name: look
        run: echo ${GITHUB_WORKFLOW} && ls -la ${GITHUB_WORKFLOW}
+     - name: save_build_image
+       run: docker save -o ${GITHUB_WORKFLOW}/zingolabs_zcashdebian.tar zingolabs/zcashdebian
   linux_x64_btest:
     runs-on: ubuntu-16.04
     needs: linux_x64_build

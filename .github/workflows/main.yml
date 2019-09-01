@@ -17,6 +17,7 @@ jobs:
      - name: save_build_image
        run: docker save -o ${GITHUB_WORKSPACE}/zingolabs_zcashdebian.tar zingolabs/zcashdebian
   linux_x64_btest:
+    container: zingolabs/zcashdebian
     runs-on: ubuntu-16.04
     needs: linux_x64_build
     steps:

@@ -1,7 +1,7 @@
 Inputs:
 
 availability zone
-credentials
+credentials (secret, keyid)
 AMI specs
 
 Outputs:

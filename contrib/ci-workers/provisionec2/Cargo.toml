@@ -5,6 +5,7 @@ authors = ["Za Wilcox <zancas@protonmail.com>"]
 edition = "2018"
 
 [dependencies]
-rusoto_credential = "0.40.0"
-rusoto_ec2 = "0.40.0"
-rusoto_core = "0.40.0"
+rusoto_credential = {version = "0.40.0"}
+rusoto_ec2 = {version = "0.40.0"}
+rusoto_core = {version = "0.40.0"}
+structopt = "0.3.1"

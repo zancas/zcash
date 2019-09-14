@@ -1,0 +1,10 @@
+[package]
+name = "provisionec2"
+version = "0.1.0"
+authors = ["Za Wilcox <zancas@protonmail.com>"]
+edition = "2018"
+
+[dependencies]
+rusoto_credential = "0.40.0"
+rusoto_ec2 = "0.40.0"
+rusoto_core = "0.40.0"

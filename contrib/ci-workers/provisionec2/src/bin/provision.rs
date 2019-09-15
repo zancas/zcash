@@ -5,6 +5,8 @@ fn main() {
     let run_instance_request = rusoto_ec2::RunInstancesRequest {
         dry_run: Some(true),
         image_id: Some(String::from("ami-0006ea01070db4b0d")),
+        min_count: 1,
+        max_count: 1,
         ..Default::default()
     };
     println!(

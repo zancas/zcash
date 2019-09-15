@@ -1,5 +1,5 @@
 #![deny(unsafe_code)]
-use rusoto_ec2::{Ec2, Filter};
+use rusoto_ec2::Ec2;
 fn main() {
     let client = rusoto_ec2::Ec2Client::new(rusoto_core::Region::UsEast1);
     let run_instance_request = rusoto_ec2::RunInstancesRequest {

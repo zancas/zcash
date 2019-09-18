@@ -52,7 +52,6 @@ fn main() {
             break reservations;
         }
         std::thread::sleep(std::time::Duration::new(1, 500_000_000));
-        println!("Looping!");
     };
     let pub_ip = loop {
         let pub_ip = extract_pub_ip(&extract_reservations(

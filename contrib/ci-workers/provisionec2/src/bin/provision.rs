@@ -1,5 +1,8 @@
 #![deny(unsafe_code)]
-use rusoto_ec2::{Ec2, Filter, Tag, TagSpecification};
+use rusoto_ec2::{
+    DescribeInstancesRequest, DescribeInstancesResult, Ec2, Ec2Client, Filter, Instance,
+    Reservation, Tag, TagSpecification,
+};
 fn main() {
     let client = rusoto_ec2::Ec2Client::new(rusoto_core::Region::UsEast2);
     let run_instance_request = rusoto_ec2::RunInstancesRequest {
@@ -24,8 +27,8 @@ fn main() {
         .unwrap()
         .instances
         .unwrap();
-    fn extract_pub_ip(client: &rusoto_ec2::Ec2Client) -> String {
-        let describe_instance_request = rusoto_ec2::DescribeInstancesRequest {
+    let reservations = loop {
+        let describe_instance_request = DescribeInstancesRequest {
             dry_run: Some(false),
             filters: Some(vec![
                 Filter {
@@ -39,19 +42,27 @@ fn main() {
             ]),
             ..Default::default()
         };
-        client
-            .describe_instances(describe_instance_request)
-            .sync()
-            .unwrap()
-            .reservations
-            .unwrap()[0]
-            .instances
-            .as_ref()
-            .unwrap()[0]
-            .public_ip_address
-            .as_ref()
-            .unwrap()
-            .clone()
-    }
-    println!("{:#?}", extract_pub_ip(&client));
+        let reservations = extract_reservations(
+            client
+                .describe_instances(describe_instance_request)
+                .sync()
+                .unwrap(),
+        );
+        if *reservations != [] {
+            break reservations;
+        }
+    };
+    println!("{:#?}", reservations);
+}
+
+fn extract_reservations(describe_instances_result: DescribeInstancesResult) -> Vec<Reservation> {
+    describe_instances_result.reservations.unwrap()
+}
+
+fn extract_pub_ip(reservations: &Vec<Reservation>) -> String {
+    reservations[0].instances.as_ref().unwrap()[0]
+        .public_ip_address
+        .as_ref()
+        .unwrap()
+        .clone()
 }

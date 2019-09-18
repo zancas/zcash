@@ -27,32 +27,46 @@ fn main() {
         .unwrap()
         .instances
         .unwrap();
+    let describe_instance_request = DescribeInstancesRequest {
+        dry_run: Some(false),
+        filters: Some(vec![
+            Filter {
+                name: Some(String::from("tag:amibuilder")),
+                values: Some(vec![String::from("test1")]),
+            },
+            Filter {
+                name: Some(String::from("instance-state-code")),
+                values: Some(vec![String::from("16")]),
+            },
+        ]),
+        ..Default::default()
+    };
     let reservations = loop {
-        let describe_instance_request = DescribeInstancesRequest {
-            dry_run: Some(false),
-            filters: Some(vec![
-                Filter {
-                    name: Some(String::from("tag:amibuilder")),
-                    values: Some(vec![String::from("test1")]),
-                },
-                Filter {
-                    name: Some(String::from("instance-state-code")),
-                    values: Some(vec![String::from("16")]),
-                },
-            ]),
-            ..Default::default()
-        };
         let reservations = extract_reservations(
             client
-                .describe_instances(describe_instance_request)
+                .describe_instances(describe_instance_request.clone())
                 .sync()
                 .unwrap(),
         );
         if *reservations != [] {
             break reservations;
         }
+        std::thread::sleep(std::time::Duration::new(1, 500_000_000));
+        println!("Looping!");
     };
-    println!("{:#?}", reservations);
+    let pub_ip = loop {
+        let pub_ip = extract_pub_ip(&extract_reservations(
+            client
+                .describe_instances(describe_instance_request.clone())
+                .sync()
+                .unwrap(),
+        ));
+        if pub_ip != "" {
+            break pub_ip;
+        }
+        std::thread::sleep(std::time::Duration::new(1, 500_000_000));
+    };
+    pub_ip
 }
 
 fn extract_reservations(describe_instances_result: DescribeInstancesResult) -> Vec<Reservation> {

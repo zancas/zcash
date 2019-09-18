@@ -1,7 +1,7 @@
 #![deny(unsafe_code)]
 use rusoto_ec2::{
-    DescribeInstancesRequest, DescribeInstancesResult, Ec2, Ec2Client, Filter, Instance,
-    Reservation, Tag, TagSpecification,
+    DescribeInstancesRequest, DescribeInstancesResult, Ec2, Filter, Instance, Reservation, Tag,
+    TagSpecification,
 };
 fn main() {
     let client = rusoto_ec2::Ec2Client::new(rusoto_core::Region::UsEast2);

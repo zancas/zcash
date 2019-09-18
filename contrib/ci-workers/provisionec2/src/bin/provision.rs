@@ -1,6 +1,6 @@
 #![deny(unsafe_code)]
 use rusoto_ec2::{
-    DescribeInstancesRequest, DescribeInstancesResult, Ec2, Filter, Instance, Reservation, Tag,
+    DescribeInstancesRequest, DescribeInstancesResult, Ec2, Filter, Reservation, Tag,
     TagSpecification,
 };
 fn main() {
@@ -70,6 +70,20 @@ fn main() {
         .unwrap()
         .write_all(&pub_ip.replace("\"", "").into_bytes())
         .unwrap();
+    let ssh_out = loop {
+        let output = std::process::Command::new("ssh")
+            .args(&["-o", "StrictHostKeyChecking=no"])
+            .args(&["-i", "rsa_aws_ec2"])
+            .arg(format!("ubuntu@{}", pub_ip))
+            .output()
+            .expect("Couldn't run ssh");
+        let mut err_output = String::from_utf8(output.stderr).unwrap();
+        let error_end = err_output.split_off(92);
+        if err_output != "Pseudo-terminal will not be allocated because stdin is not a terminal.\r\nssh: connect to host" {
+            break output.stdout;
+        }
+        std::thread::sleep(std::time::Duration::new(10, 0));
+    };
 }
 
 fn extract_reservations(describe_instances_result: DescribeInstancesResult) -> Vec<Reservation> {
@@ -77,6 +91,7 @@ fn extract_reservations(describe_instances_result: DescribeInstancesResult) -> V
 }
 
 fn extract_pub_ip(reservations: &Vec<Reservation>) -> String {
+    assert_eq!(reservations.len(), 1);
     reservations[0].instances.as_ref().unwrap()[0]
         .public_ip_address
         .as_ref()

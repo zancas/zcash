@@ -1,3 +1,4 @@
 Cargo.lock
 target/*
 ec2workerpublicIPv4.txt
+rsa_aws_ec2

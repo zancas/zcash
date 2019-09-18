@@ -65,7 +65,11 @@ fn main() {
         }
         std::thread::sleep(std::time::Duration::new(1, 500_000_000));
     };
-    pub_ip
+    use std::io::Write;
+    std::fs::File::create("ec2workerpublicIPv4.txt")
+        .unwrap()
+        .write_all(&pub_ip.replace("\"", "").into_bytes())
+        .unwrap();
 }
 
 fn extract_reservations(describe_instances_result: DescribeInstancesResult) -> Vec<Reservation> {

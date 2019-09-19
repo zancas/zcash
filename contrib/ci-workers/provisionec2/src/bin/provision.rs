@@ -1,4 +1,10 @@
 #![deny(unsafe_code)]
+const INVENTORY_TEMPLATE: &str = "
+all:
+  hosts:
+    zcash-ci-worker-unix:
+      ansible_host: {}
+      ansible_ssh_user: ubuntu";
 use rusoto_ec2::{
     DescribeInstancesRequest, DescribeInstancesResult, Ec2, Filter, Reservation, Tag,
     TagSpecification,
@@ -65,15 +71,23 @@ fn main() {
         }
         std::thread::sleep(std::time::Duration::new(1, 500_000_000));
     };
+    let current_dir = std::env::current_dir().expect("Couldn't create current dir PathBuf");
+    let parent_dir = current_dir
+        .parent()
+        .expect("Couldn't create parent dir PathBuf!");
+    println!("{:#?}", parent_dir);
+    std::env::set_current_dir(parent_dir);
     use std::io::Write;
-    std::fs::File::create("ec2workerpublicIPv4.txt")
+    let hosts_text = format!(INVENTORY_TEMPLATE, &pub_ip.replace("\"", ""));
+    std::fs::File::create("inventory/hosts")
         .unwrap()
-        .write_all(&pub_ip.replace("\"", "").into_bytes())
+        .write_all(hosts_text)
         .unwrap();
+    let key_pathname = std::env::var("PRIVATE_SSH_KEY").unwrap();
     let ssh_out = loop {
         let output = std::process::Command::new("ssh")
             .args(&["-o", "StrictHostKeyChecking=no"])
-            .args(&["-i", "rsa_aws_ec2"])
+            .args(&["-i", &key_pathname)
             .arg(format!("ubuntu@{}", pub_ip))
             .output()
             .expect("Couldn't run ssh");
@@ -84,6 +98,13 @@ fn main() {
         }
         std::thread::sleep(std::time::Duration::new(10, 0));
     };
+    std::process::Command::new("ansible-playbook")
+        .args(&["-e", "buildbot_worker_host_template=templates/host.ec2.j2"])
+        .arg(format!("--private-key={}", &key_pathname)
+        .args(&["-i", "inventory/hosts"])
+        .arg("unix.yml"])
+        .output()
+        .expect("ansible-playbook invocation failed!");
 }
 
 fn extract_reservations(describe_instances_result: DescribeInstancesResult) -> Vec<Reservation> {

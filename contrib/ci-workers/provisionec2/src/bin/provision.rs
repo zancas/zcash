@@ -1,9 +1,10 @@
 #![deny(unsafe_code)]
-const INVENTORY_TEMPLATE: &str = "
+const INVENTORY_TEMPLATE_PREFIX: &str = "
 all:
   hosts:
     zcash-ci-worker-unix:
-      ansible_host: {}
+      ansible_host: ";
+const INVENTORY_TEMPLATE_PREFIX: &str = "\n
       ansible_ssh_user: ubuntu";
 use rusoto_ec2::{
     DescribeInstancesRequest, DescribeInstancesResult, Ec2, Filter, Reservation, Tag,
@@ -78,7 +79,12 @@ fn main() {
     println!("{:#?}", parent_dir);
     std::env::set_current_dir(parent_dir);
     use std::io::Write;
-    let hosts_text = format!(INVENTORY_TEMPLATE, &pub_ip.replace("\"", ""));
+    let hosts_text = format!(
+        "{}{}{}",
+        INVENTORY_TEMPLATE_PREFIX,
+        &pub_ip.replace("\"", ""),
+        INVENTORY_TEMPLATE_SUFFIX
+    );
     std::fs::File::create("inventory/hosts")
         .unwrap()
         .write_all(hosts_text)
@@ -87,7 +93,7 @@ fn main() {
     let ssh_out = loop {
         let output = std::process::Command::new("ssh")
             .args(&["-o", "StrictHostKeyChecking=no"])
-            .args(&["-i", &key_pathname)
+            .args(&["-i", &key_pathname])
             .arg(format!("ubuntu@{}", pub_ip))
             .output()
             .expect("Couldn't run ssh");
@@ -100,9 +106,9 @@ fn main() {
     };
     std::process::Command::new("ansible-playbook")
         .args(&["-e", "buildbot_worker_host_template=templates/host.ec2.j2"])
-        .arg(format!("--private-key={}", &key_pathname)
+        .arg(format!("--private-key={}", &key_pathname))
         .args(&["-i", "inventory/hosts"])
-        .arg("unix.yml"])
+        .arg("unix.yml")
         .output()
         .expect("ansible-playbook invocation failed!");
 }

@@ -4,8 +4,9 @@ all:
   hosts:
     zcash-ci-worker-unix:
       ansible_host: ";
-const INVENTORY_TEMPLATE_PREFIX: &str = "\n
+const INVENTORY_TEMPLATE_SUFFIX: &str = "
       ansible_ssh_user: ubuntu";
+
 use rusoto_ec2::{
     DescribeInstancesRequest, DescribeInstancesResult, Ec2, Filter, Reservation, Tag,
     TagSpecification,
@@ -85,10 +86,7 @@ fn main() {
         &pub_ip.replace("\"", ""),
         INVENTORY_TEMPLATE_SUFFIX
     );
-    std::fs::File::create("inventory/hosts")
-        .unwrap()
-        .write_all(hosts_text)
-        .unwrap();
+    std::fs::write("inventory/hosts", hosts_text).expect("Write failure!");
     let key_pathname = std::env::var("PRIVATE_SSH_KEY").unwrap();
     let ssh_out = loop {
         let output = std::process::Command::new("ssh")
@@ -104,6 +102,7 @@ fn main() {
         }
         std::thread::sleep(std::time::Duration::new(10, 0));
     };
+    println!("About to make blocking call to ansible-playbook!");
     std::process::Command::new("ansible-playbook")
         .args(&["-e", "buildbot_worker_host_template=templates/host.ec2.j2"])
         .arg(format!("--private-key={}", &key_pathname))

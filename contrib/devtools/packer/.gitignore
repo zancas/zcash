@@ -1,2 +1,6 @@
 aws/*rsa*pub
 loaded_packer_build.sh
+imageid.txt
+buildlog.txt
+parse_ami_id/target
+parse_ami_id/Cargo.lock

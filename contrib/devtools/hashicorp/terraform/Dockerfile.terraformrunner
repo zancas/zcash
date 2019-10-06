@@ -3,7 +3,7 @@
 # https://hub.docker.com/layers/golang/library/golang/latest/images/sha256-a50a9364e9170ab5f5b03389ed33b9271b4a7b6bbb0ab41c4035adb3078927bc
 FROM   		golang@sha256:a50a9364e9170ab5f5b03389ed33b9271b4a7b6bbb0ab41c4035adb3078927bc AS build
 # Packer depends on certificate authorities, presumably to authenticate providers (e.g. AWS)
-RUN         apt-get update && apt-get install -y unzip gpg
+RUN         apt-get update && apt-get install -y unzip gpg ca-certificates && update-ca-certificates
 
 # Following this: https://learn.hashicorp.com/terraform/getting-started/install#installing-terraform 
 RUN         curl https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip \
@@ -17,10 +17,15 @@ RUN         curl https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.
 
 RUN         gpg --keyserver keys.gnupg.net --recv 51852D87348FFC4C && gpg --verify \
                 terraform_0.12.9_SHA256SUMS.sig terraform_0.12.9_SHA256SUMS
+ARG         USER
+ARG         UID
+RUN         useradd -m -d /home/$USER -U -u $UID $USER && chown -Rf $USER:$USER /tmp && ls -la /tmp
 ###########################################
 # Build a small image to facilitate sharing
 ###########################################
 FROM        scratch
+COPY        --from=build /etc/passwd /etc/passwd
+COPY        --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY        --from=build /go/terraform /terraform
-COPY        --from=build /tmp /tmp
+USER        $USER
 ENTRYPOINT  ["/terraform"]

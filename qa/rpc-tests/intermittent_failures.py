@@ -39,6 +39,7 @@ class WalletListNotes(BitcoinTestFramework):
         self.sync_all()
         while count < 1000:
             count = count + 1
+            print("We are inside the for loop!")
             myopid = self.nodes[0].z_sendmany(saplingzaddr, recipients)
             txid_2 = wait_and_assert_operationid_status(self.nodes[0], myopid)
             print(txid_2)

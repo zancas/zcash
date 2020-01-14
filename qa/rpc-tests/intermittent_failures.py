@@ -32,11 +32,10 @@ class WalletListNotes(BitcoinTestFramework):
 
         # Send 0.001 (actually 0.9988) from saplingzaddr to a new zaddr
         receive_amount_point_1 = Decimal('0.001') - Decimal('0.0001')
-        change_amount_9 = receive_amount_10 - Decimal('0.1')
         assert_equal('sapling', self.nodes[0].z_validateaddress(saplingzaddr)['type'])
         saplingzaddr2 = self.nodes[0].z_getnewaddress('sapling')
         assert_equal('sapling', self.nodes[0].z_validateaddress(saplingzaddr2)['type'])
-        recipients = [{"address": saplingzaddr2, "amount":receive_amount_point_1}]
+        recipients = [{"address": saplingzaddr2, "amount": receive_amount_point_1}]
         count = 0
         while count < 1000:
             count = count + 1
@@ -45,10 +44,7 @@ class WalletListNotes(BitcoinTestFramework):
         
             # list unspent, allowing 0conf txs
             unspent_tx = self.nodes[0].z_listunspent(0)
-            try:
-                assert_equal(len(unspent_tx), 1 + count)
-            except Exception as e:
-                print(e)
+            assert_equal(len(unspent_tx), 1 + count)
 
 
 if __name__ == '__main__':

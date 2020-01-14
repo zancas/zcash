@@ -27,7 +27,7 @@ class WalletListNotes(BitcoinTestFramework):
         recipients = [{"address":saplingzaddr, "amount": receive_amount_10}]
         myopid = self.nodes[0].z_sendmany(get_coinbase_address(self.nodes[0]), recipients)
         txid_1 = wait_and_assert_operationid_status(self.nodes[0], myopid)
-        self.nodes[0].generate(1)
+        self.nodes[0].generate(101)
         self.sync_all()
 
         # Send 0.001 (actually 0.9988) from saplingzaddr to a new zaddr

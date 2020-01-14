@@ -104,9 +104,9 @@ function main () {
 
     LOGFILE=$LOGDIRNAME/$LOGBASENAME;
     echo "This run started at: " >> $LOGFILE;
+    date "+%s" >> $LOGFILE;
     ZCASHDVERSION=`./$REPO_NAME/src/zcashd --version`
     echo "The zcsahd version is: ${ZCASHDVERSION}" >> ${LOGFILE};
-    date "+%s" >> $LOGFILE;
     let count=1;
     while [ $count -le $ITERATIONS ];
     do

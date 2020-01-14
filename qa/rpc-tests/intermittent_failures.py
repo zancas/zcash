@@ -37,12 +37,16 @@ class WalletListNotes(BitcoinTestFramework):
         saplingzaddr2 = self.nodes[0].z_getnewaddress('sapling')
         assert_equal('sapling', self.nodes[0].z_validateaddress(saplingzaddr2)['type'])
         recipients = [{"address": saplingzaddr2, "amount":receive_amount_point_1}]
-        myopid = self.nodes[0].z_sendmany(saplingzaddr, recipients)
-        txid_2 = wait_and_assert_operationid_status(self.nodes[0], myopid)
+        count = 0
+        while count < 1:
+            count = count + 1
+            myopid = self.nodes[0].z_sendmany(saplingzaddr, recipients)
+            txid_2 = wait_and_assert_operationid_status(self.nodes[0], myopid)
         
-        # list unspent, allowing 0conf txs
-        unspent_tx = self.nodes[0].z_listunspent(0)
-        assert_equal(len(unspent_tx), 2)
+            # list unspent, allowing 0conf txs
+            unspent_tx = self.nodes[0].z_listunspent(0)
+            assert_equal(len(unspent_tx), 1 + count)
+
 
 if __name__ == '__main__':
     WalletListNotes().main()

@@ -26,7 +26,7 @@ class WalletListNotes(BitcoinTestFramework):
         receive_amount_10 = Decimal('10.0') - Decimal('0.0001')
         recipients = [{"address":saplingzaddr, "amount": receive_amount_10}]
         myopid = self.nodes[0].z_sendmany(get_coinbase_address(self.nodes[0]), recipients)
-        self.sync_all()
+        txid_1 = wait_and_assert_operationid_status(self.nodes[0], myopid)
 
         # Send 1.0 (actually 0.9999) from saplingzaddr to a new zaddr
         receive_amount_point_1 = Decimal('0.1') - Decimal('0.0001')

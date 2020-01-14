@@ -21,10 +21,11 @@ class WalletListNotes(BitcoinTestFramework):
         # Current height = 200
         assert_equal(200, self.nodes[0].getblockcount())
         saplingzaddr = self.nodes[0].z_getnewaddress('sapling')
+        self.nodes[0].generate(1)
         saplingzaddr2 = self.nodes[0].z_getnewaddress('sapling')
-        receive_amount_10 = Decimal('10.0') - Decimal('0.0001')
 
         # Send 1.0 (actually 0.9999) from saplingzaddr to a new zaddr
+        receive_amount_10 = Decimal('10.0') - Decimal('0.0001')
         receive_amount_1 = Decimal('1.0') - Decimal('0.0001')
         change_amount_9 = receive_amount_10 - Decimal('1.0')
         assert_equal('sapling', self.nodes[0].z_validateaddress(saplingzaddr)['type'])

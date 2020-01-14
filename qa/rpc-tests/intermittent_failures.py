@@ -38,7 +38,7 @@ class WalletListNotes(BitcoinTestFramework):
         assert_equal('sapling', self.nodes[0].z_validateaddress(saplingzaddr2)['type'])
         recipients = [{"address": saplingzaddr2, "amount":receive_amount_point_1}]
         count = 0
-        while count < 1:
+        while count < 1000:
             count = count + 1
             myopid = self.nodes[0].z_sendmany(saplingzaddr, recipients)
             txid_2 = wait_and_assert_operationid_status(self.nodes[0], myopid)

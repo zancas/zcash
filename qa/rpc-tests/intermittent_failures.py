@@ -42,7 +42,6 @@ class WalletListNotes(BitcoinTestFramework):
         
         # list unspent, allowing 0conf txs
         unspent_tx = self.nodes[0].z_listunspent(0)
-        breakpoint()
         assert_equal(len(unspent_tx), 2)
 
 if __name__ == '__main__':

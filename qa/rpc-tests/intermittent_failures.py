@@ -20,19 +20,22 @@ class WalletListNotes(BitcoinTestFramework):
     def run_test(self):
         # Current height = 200
         assert_equal(200, self.nodes[0].getblockcount())
+
+        # Get some ZEC at a z-addr
         saplingzaddr = self.nodes[0].z_getnewaddress('sapling')
-        self.nodes[0].generate(1)
-        saplingzaddr2 = self.nodes[0].z_getnewaddress('sapling')
+        receive_amount_10 = Decimal('10.0') - Decimal('0.0001')
+        recipients = [{"address":saplingzaddr, "amount": receive_amount_10}]
+        myopid = self.nodes[0].z_sendmany(get_coinbase_address(self.nodes[0]), recipients)
 
         # Send 1.0 (actually 0.9999) from saplingzaddr to a new zaddr
-        receive_amount_10 = Decimal('10.0') - Decimal('0.0001')
-        receive_amount_1 = Decimal('1.0') - Decimal('0.0001')
-        change_amount_9 = receive_amount_10 - Decimal('1.0')
+        receive_amount_point_1 = Decimal('0.1') - Decimal('0.0001')
+        change_amount_9 = receive_amount_10 - Decimal('0.1')
         assert_equal('sapling', self.nodes[0].z_validateaddress(saplingzaddr)['type'])
-        recipients = [{"address": saplingzaddr2, "amount":receive_amount_1}]
+        saplingzaddr2 = self.nodes[0].z_getnewaddress('sapling')
+        assert_equal('sapling', self.nodes[0].z_validateaddress(saplingzaddr2)['type'])
+        recipients = [{"address": saplingzaddr2, "amount":receive_amount_point_1}]
         myopid = self.nodes[0].z_sendmany(saplingzaddr, recipients)
         txid_2 = wait_and_assert_operationid_status(self.nodes[0], myopid)
-        self.sync_all()
         
         # list unspent, allowing 0conf txs
         unspent_tx = self.nodes[0].z_listunspent(0)

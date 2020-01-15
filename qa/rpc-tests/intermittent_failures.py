@@ -43,7 +43,7 @@ class WalletListNotes(BitcoinTestFramework):
             lagtime = Decimal(stop) - Decimal(start)
             lag_times.append(lagtime)
             self.nodes[0].generate(10)
-            time.sleep(.25)
+            time.sleep(1)
         print(lag_times)
         print(Decimal(sum(lag_times))/Decimal(len(lag_times)))
 

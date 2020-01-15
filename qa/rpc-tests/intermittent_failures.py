@@ -31,8 +31,8 @@ class WalletListNotes(BitcoinTestFramework):
         faucet = self.nodes[0].z_getnewaddress('sapling')
         blockreward = Decimal('9.999')
         txid = self._send_amt(coinbase_addr, faucet, blockreward)
-        #self.nodes[0].generate(100)
-        #self.sync_all()
+        self.nodes[0].generate(100)
+        self.sync_all()
         millizec = Decimal('0.001')
         lag_times = []
         for _ in range(100):

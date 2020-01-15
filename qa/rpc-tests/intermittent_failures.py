@@ -31,12 +31,19 @@ class WalletListNotes(BitcoinTestFramework):
         # Send 0.001 (actually 0.0009) from saplingzaddr to a new zaddr
         receive_amount_point_1 = Decimal('0.001') - Decimal('0.0001')
         saplingzaddr2 = self.nodes[0].z_getnewaddress('sapling')
+        print("received by saplingzaddr: ")
         print(self.nodes[0].z_listreceivedbyaddress(saplingzaddr))
+        print("received by saplingzaddr2: ")
         print(self.nodes[0].z_listreceivedbyaddress(saplingzaddr2))
-        recipients = [{"address": saplingzaddr2, "amount": receive_amount_point_1}]
-        count = 0
         self.nodes[0].generate(101)
         self.sync_all()
+        print("After generation an sync_all, received by saplingzaddr: ")
+        print(self.nodes[0].z_listreceivedbyaddress(saplingzaddr))
+        print("After generation an sync_all, received by saplingzaddr2: ")
+        print(self.nodes[0].z_listreceivedbyaddress(saplingzaddr2))
+        '''
+        recipients = [{"address": saplingzaddr2, "amount": receive_amount_point_1}]
+        count = 0
         while count < 3:
             count = count + 1
             print("We are inside the %s th iteration of the for loop!" % count)
@@ -52,7 +59,7 @@ class WalletListNotes(BitcoinTestFramework):
             unspent_tx = self.nodes[0].z_listunspent(0)
             print("After sync unspent_tx's were: %s" % unspent_tx)
             assert_equal(len(unspent_tx), 1 + count, message)
-
+        '''
 
 if __name__ == '__main__':
     WalletListNotes().main()

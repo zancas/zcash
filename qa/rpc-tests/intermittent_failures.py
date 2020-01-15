@@ -30,14 +30,14 @@ class WalletListNotes(BitcoinTestFramework):
         self.sync_all()
         faucet = self.nodes[0].z_getnewaddress('sapling')
         blockreward = Decimal('9.999')
-        txid = self._send_amt(coinbase_addr, faucet, blockreward)
+        self._send_amt(coinbase_addr, faucet, blockreward)
         self.nodes[0].generate(100)
         self.sync_all()
         millizec = Decimal('0.001')
         lag_times = []
-        for _ in range(1):
+        for _ in range(2):
             toaddr = self.nodes[0].z_getnewaddress('sapling')
-            txid = self._send_amt(faucet, toaddr, millizec)
+            self._send_amt(faucet, toaddr, millizec)
             start = time.time()
             while self.nodes[0].z_listunspent(0, 9999, False, [toaddr]) == []:
                 time.sleep(0.001)

@@ -47,7 +47,7 @@ class WalletListNotes(BitcoinTestFramework):
         assert_equal(receive_amount_10, unspent_cb[0]['amount'])
 
         # Send 0.001 (actually 0.0009) from saplingzaddr to a new zaddr
-        #self.nodes[0].generate(1)
+        self.nodes[0].generate(1)
         self.sync_all()
         receive_amount_point_1 = Decimal('0.001') - Decimal('0.0001')
         saplingzaddr2 = self.nodes[0].z_getnewaddress('sapling')

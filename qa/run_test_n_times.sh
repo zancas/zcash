@@ -114,6 +114,7 @@ function main () {
         && ./$REPO_NAME/qa/pull-tester/rpc-tests.sh $TEST_NAME >> $LOGFILE 2>&1 ; LASTPID=$! \
         && count=$(( $count + 1 ))
     done
+    rm -rf .lock blocks cache chainstate database db.log debug.log zcashd.pid
 }
 
 control_c() {

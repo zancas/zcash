@@ -35,3 +35,6 @@ class WalletListNotes(BitcoinTestFramework):
             time.sleep(0.01)
         stop = time.time()
         print(stop - start)
+
+if __name__ == '__main__':
+    WalletListNotes().main()

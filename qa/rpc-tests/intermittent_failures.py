@@ -37,11 +37,8 @@ class WalletListNotes(BitcoinTestFramework):
         from pprint import pprint as pp
         pp(self.nodes[0].z_listreceivedbyaddress(saplingzaddr))
         recipients = [{"address": saplingzaddr2, "amount": receive_amount_point_1}]
-        myopid = self.nodes[0].z_sendmany(saplingzaddr, recipients)
-        self.nodes[0].generate(150)
-        time.sleep(15)
-        self.sync_all()
-        print("Receivedby zaddr2: ")
+        myopid2 = self.nodes[0].z_sendmany(saplingzaddr, recipients)
+        txid_1 = wait_and_assert_operationid_status(self.nodes[0], myopid2)
         pp(self.nodes[0].z_listreceivedbyaddress(saplingzaddr2))
         
         '''

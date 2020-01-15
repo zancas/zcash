@@ -33,7 +33,8 @@ class WalletListNotes(BitcoinTestFramework):
         self.nodes[0].generate(10)
         millizec = Decimal('0.001')
         lag_times = []
-        for _ in range(100):
+        for iteration in range(100):
+            print("Iteration: %s" % iteration)
             toaddr = self.nodes[0].z_getnewaddress('sapling')
             self._send_amt(faucet, toaddr, millizec)
             start = time.time()

@@ -27,7 +27,22 @@ class WalletListNotes(BitcoinTestFramework):
         coinbasepayee = [{"address": saplingzaddr, "amount": receive_amount_10}]
         myopid = self.nodes[0].z_sendmany(get_coinbase_address(self.nodes[0]), coinbasepayee)
         txid_1 = wait_and_assert_operationid_status(self.nodes[0], myopid)
-        self.nodes[0].generate(10)
+
+        # No funds (with (default) one or more confirmations) in sproutzaddr yet
+        assert_equal(0, len(self.nodes[0].z_listunspent()))
+        assert_equal(0, len(self.nodes[0].z_listunspent(1)))
+        
+        # no private balance because no confirmations yet
+        assert_equal(0, Decimal(self.nodes[0].z_gettotalbalance()['private']))
+        
+        # list private unspent, this time allowing 0 confirmations
+        unspent_cb = self.nodes[0].z_listunspent(0)
+        assert_equal(1, len(unspent_cb))
+        assert_equal(False,             unspent_cb[0]['change'])
+        assert_equal(txid_1,            unspent_cb[0]['txid'])
+        assert_equal(True,              unspent_cb[0]['spendable'])
+        assert_equal(sproutzaddr,       unspent_cb[0]['address'])
+        assert_equal(receive_amount_10, unspent_cb[0]['amount'])
 
         # Send 0.001 (actually 0.0009) from saplingzaddr to a new zaddr
         receive_amount_point_1 = Decimal('0.001') - Decimal('0.0001')
@@ -36,7 +51,7 @@ class WalletListNotes(BitcoinTestFramework):
         pp(self.nodes[0].z_listreceivedbyaddress(saplingzaddr))
         recipients = [{"address": saplingzaddr2, "amount": receive_amount_point_1}]
         myopid2 = self.nodes[0].z_sendmany(saplingzaddr, recipients)
-        txid_1 = wait_and_assert_operationid_status(self.nodes[0], myopid2)
+        txid_2 = wait_and_assert_operationid_status(self.nodes[0], myopid2)
         pp(self.nodes[0].z_listreceivedbyaddress(saplingzaddr2))
         
         '''

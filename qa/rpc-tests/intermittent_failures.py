@@ -25,16 +25,17 @@ class WalletListNotes(BitcoinTestFramework):
         return wait_and_assert_operationid_status(self.nodes[0], myopid)
 
     def run_test(self):
-        receive_amount_10 = Decimal('10.0') - Decimal('0.0001')
-        # Send 9.9999 ZEC to a z-addr
-        saplingzaddr = self.nodes[0].z_getnewaddress('sapling')
-        txid_1 = self._send_amt(get_coinbase_address(self.nodes[0]), saplingzaddr, receive_amount_10)
-
-        start = time.time()
-        while self.nodes[0].z_listunspent(0, 9999, False, [saplingzaddr]) == []:
-            time.sleep(0.01)
-        stop = time.time()
-        print(stop - start)
+        coinbase_addr = get_coinbase_address(self.nodes[0])
+        receive_amount = Decimal('0.01')
+        lag_times = []
+        for _ in range(100):
+            toaddr = self.nodes[0].z_getnewaddress('sapling')
+            txid = self._send_amt(coinbase_addr, toaddr, receive_amount)
+            start = time.time()
+            while self.nodes[0].z_listunspent(0, 9999, False, [toaddr]) == []:
+                time.sleep(0.001)
+            stop = time.time()
+            lag_times.appen(stop - start)
 
 if __name__ == '__main__':
     WalletListNotes().main()

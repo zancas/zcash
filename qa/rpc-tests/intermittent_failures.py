@@ -39,7 +39,7 @@ class WalletListNotes(BitcoinTestFramework):
         self.nodes[0].generate(150)
         self.sync_all()
         import time
-        time.sleep(10)
+        time.sleep(15)
         print("Receivedby zaddr2: ")
         pp(self.nodes[0].z_listreceivedbyaddress(saplingzaddr2))
         

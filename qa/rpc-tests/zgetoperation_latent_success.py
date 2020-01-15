@@ -17,7 +17,7 @@ from pprint import pprint as pp
 import time
 
 # Test wallet z_listunspent behaviour across network upgrades
-class WalletListNotes(BitcoinTestFramework):
+class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
 
     def _send_amt(self, from_addr, to_addr, amnt):
         recipients = [{"address": to_addr, "amount": amnt}]
@@ -49,4 +49,4 @@ class WalletListNotes(BitcoinTestFramework):
         print(Decimal(sum(lag_times))/Decimal(len(lag_times)))
 
 if __name__ == '__main__':
-    WalletListNotes().main()
+    ZGetOperationResultsLatentSuccess().main()

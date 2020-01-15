@@ -27,21 +27,17 @@ class WalletListNotes(BitcoinTestFramework):
         coinbasepayee = [{"address": saplingzaddr, "amount": receive_amount_10}]
         myopid = self.nodes[0].z_sendmany(get_coinbase_address(self.nodes[0]), coinbasepayee)
         txid_1 = wait_and_assert_operationid_status(self.nodes[0], myopid)
+        self.nodes[0].generate(10)
 
         # Send 0.001 (actually 0.0009) from saplingzaddr to a new zaddr
         receive_amount_point_1 = Decimal('0.001') - Decimal('0.0001')
         saplingzaddr2 = self.nodes[0].z_getnewaddress('sapling')
-        print("received by saplingzaddr: ")
-        print(self.nodes[0].z_listreceivedbyaddress(saplingzaddr))
-        print("received by saplingzaddr2: ")
-        print(self.nodes[0].z_listreceivedbyaddress(saplingzaddr2))
-        self.nodes[0].generate(10)
-        print("After generation received by saplingzaddr: ")
-        print(self.nodes[0].z_listreceivedbyaddress(saplingzaddr))
-        print("After generation received by saplingzaddr2: ")
-        print(self.nodes[0].z_listreceivedbyaddress(saplingzaddr2))
-        '''
+        from pprint import pprint as pp
+        pp(self.nodes[0].z_listreceivedbyaddress(saplingzaddr))
         recipients = [{"address": saplingzaddr2, "amount": receive_amount_point_1}]
+        myopid = self.nodes[0].z_sendmany(saplingzaddr, recipients)
+        
+        '''
         count = 0
         while count < 3:
             count = count + 1

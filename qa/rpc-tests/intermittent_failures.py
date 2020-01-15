@@ -33,7 +33,7 @@ class WalletListNotes(BitcoinTestFramework):
         receive_amount_point_1 = Decimal('0.001') - Decimal('0.0001')
         saplingzaddr2 = self.nodes[0].z_getnewaddress('sapling')
         from pprint import pprint as pp
-        #pp(self.nodes[0].z_listreceivedbyaddress(saplingzaddr))
+        pp(self.nodes[0].z_listreceivedbyaddress(saplingzaddr))
         recipients = [{"address": saplingzaddr2, "amount": receive_amount_point_1}]
         myopid = self.nodes[0].z_sendmany(saplingzaddr, recipients)
         self.nodes[0].generate(150)

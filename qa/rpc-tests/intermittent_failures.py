@@ -26,16 +26,14 @@ class WalletListNotes(BitcoinTestFramework):
 
     def run_test(self):
         coinbase_addr = get_coinbase_address(self.nodes[0])
-        self.nodes[0].generate(100)
-        self.sync_all()
+        self.nodes[0].generate(10)
         faucet = self.nodes[0].z_getnewaddress('sapling')
         blockreward = Decimal('9.999')
         self._send_amt(coinbase_addr, faucet, blockreward)
-        self.nodes[0].generate(100)
-        self.sync_all()
+        self.nodes[0].generate(10)
         millizec = Decimal('0.001')
         lag_times = []
-        for _ in range(2):
+        for _ in range(100):
             toaddr = self.nodes[0].z_getnewaddress('sapling')
             self._send_amt(faucet, toaddr, millizec)
             start = time.time()

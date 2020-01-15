@@ -24,15 +24,13 @@ class WalletListNotes(BitcoinTestFramework):
         # Get some ZEC at a z-addr
         saplingzaddr = self.nodes[0].z_getnewaddress('sapling')
         receive_amount_10 = Decimal('10.0') - Decimal('0.0001')
-        recipients = [{"address":saplingzaddr, "amount": receive_amount_10}]
-        myopid = self.nodes[0].z_sendmany(get_coinbase_address(self.nodes[0]), recipients)
+        coinbasepayee = [{"address": saplingzaddr, "amount": receive_amount_10}]
+        myopid = self.nodes[0].z_sendmany(get_coinbase_address(self.nodes[0]), coinbasepayee)
         txid_1 = wait_and_assert_operationid_status(self.nodes[0], myopid)
 
         # Send 0.001 (actually 0.9988) from saplingzaddr to a new zaddr
         receive_amount_point_1 = Decimal('0.001') - Decimal('0.0001')
-        assert_equal('sapling', self.nodes[0].z_validateaddress(saplingzaddr)['type'])
         saplingzaddr2 = self.nodes[0].z_getnewaddress('sapling')
-        assert_equal('sapling', self.nodes[0].z_validateaddress(saplingzaddr2)['type'])
         recipients = [{"address": saplingzaddr2, "amount": receive_amount_point_1}]
         count = 0
         self.nodes[0].generate(101)

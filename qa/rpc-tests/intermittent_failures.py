@@ -28,7 +28,7 @@ class WalletListNotes(BitcoinTestFramework):
         myopid = self.nodes[0].z_sendmany(get_coinbase_address(self.nodes[0]), coinbasepayee)
         txid_1 = wait_and_assert_operationid_status(self.nodes[0], myopid)
 
-        # No funds (with (default) one or more confirmations) in sproutzaddr yet
+        # No funds (with (default) one or more confirmations) in saplingzaddr yet
         assert_equal(0, len(self.nodes[0].z_listunspent()))
         assert_equal(0, len(self.nodes[0].z_listunspent(1)))
         
@@ -41,7 +41,7 @@ class WalletListNotes(BitcoinTestFramework):
         assert_equal(False,             unspent_cb[0]['change'])
         assert_equal(txid_1,            unspent_cb[0]['txid'])
         assert_equal(True,              unspent_cb[0]['spendable'])
-        assert_equal(sproutzaddr,       unspent_cb[0]['address'])
+        assert_equal(saplingzaddr,       unspent_cb[0]['address'])
         assert_equal(receive_amount_10, unspent_cb[0]['amount'])
 
         # Send 0.001 (actually 0.0009) from saplingzaddr to a new zaddr

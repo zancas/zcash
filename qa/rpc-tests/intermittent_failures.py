@@ -37,6 +37,7 @@ class WalletListNotes(BitcoinTestFramework):
         recipients = [{"address": saplingzaddr2, "amount": receive_amount_point_1}]
         myopid = self.nodes[0].z_sendmany(saplingzaddr, recipients)
         self.nodes[0].generate(150)
+        self.sync_all()
         import time
         time.sleep(10)
         print("Receivedby zaddr2: ")

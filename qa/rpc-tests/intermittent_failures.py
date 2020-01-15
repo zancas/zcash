@@ -47,10 +47,10 @@ class WalletListNotes(BitcoinTestFramework):
             # list unspent, allowing 0conf txs
             unspent_tx = self.nodes[0].z_listunspent(0)
             message = "The count at failure was: %s" % count
-            print("The unspent_tx's were: %s" % unspent_tx)
+            print("Before sync the unspent_tx's were: %s" % unspent_tx)
             self.sync_all()
             unspent_tx = self.nodes[0].z_listunspent(0)
-            print("The unspent_tx's were: %s" % unspent_tx)
+            print("After sync unspent_tx's were: %s" % unspent_tx)
             assert_equal(len(unspent_tx), 1 + count, message)
 
 

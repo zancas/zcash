@@ -36,7 +36,6 @@ class WalletListNotes(BitcoinTestFramework):
         print("received by saplingzaddr2: ")
         print(self.nodes[0].z_listreceivedbyaddress(saplingzaddr2))
         self.nodes[0].generate(101)
-        self.sync_all()
         print("After generation an sync_all, received by saplingzaddr: ")
         print(self.nodes[0].z_listreceivedbyaddress(saplingzaddr))
         print("After generation an sync_all, received by saplingzaddr2: ")

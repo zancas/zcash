@@ -45,6 +45,8 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
             time.sleep(1)
         print(lag_times)
         print(Decimal(sum(lag_times))/Decimal(len(lag_times)))
+        import simplejson as json
+        json.dump(lag_times, open("lagtimes.json"))
 
 if __name__ == '__main__':
     ZGetOperationResultsLatentSuccess().main()

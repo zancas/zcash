@@ -3,7 +3,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://www.opensource.org/licenses/mit-license.php .
 
-import sys; assert sys.version_info < (3,), ur"This script does not run under Python 3. Please use Python 2.7.x."
+import sys; assert sys.version_info < (3,), r"This script does not run under Python 3. Please use Python 2.7.x."
 
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
@@ -34,7 +34,7 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
         millizec = Decimal('0.001')
         lag_times = []
         for iteration in range(1000):
-            print("Iteration: %s" % iteration)
+            print(("Iteration: %s" % iteration))
             toaddr = self.nodes[0].z_getnewaddress('sapling')
             self._send_amt(faucet, toaddr, millizec)
             start = time.time()
@@ -46,7 +46,7 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
             self.nodes[0].generate(10)
             time.sleep(1)
         print(lag_times)
-        print(Decimal(sum(lag_times))/Decimal(len(lag_times)))
+        print((Decimal(sum(lag_times))/Decimal(len(lag_times))))
 
 if __name__ == '__main__':
     ZGetOperationResultsLatentSuccess().main()

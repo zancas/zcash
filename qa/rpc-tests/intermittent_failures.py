@@ -14,6 +14,7 @@ from test_framework.util import (
 
 from decimal import Decimal
 from pprint import pprint as pp
+from time import time
 
 # Test wallet z_listunspent behaviour across network upgrades
 class WalletListNotes(BitcoinTestFramework):
@@ -55,6 +56,11 @@ class WalletListNotes(BitcoinTestFramework):
         myopid2 = self.nodes[0].z_sendmany(saplingzaddr, recipients)
         txid_2 = wait_and_assert_operationid_status(self.nodes[0], myopid2)
         pp(self.nodes[0].z_listreceivedbyaddress(saplingzaddr2))
+        start = time.time()
+        while self.nodes[0].z_listreceivedbyaddress(saplingzaddr2) == []:
+            time.sleep(0.1)
+        stop = time.time()
+        print(stop-start)
         
         '''
         count = 0

@@ -13,6 +13,7 @@ from test_framework.util import (
 )
 
 from decimal import Decimal
+from pprint import pprint as pp
 
 # Test wallet z_listunspent behaviour across network upgrades
 class WalletListNotes(BitcoinTestFramework):
@@ -41,13 +42,14 @@ class WalletListNotes(BitcoinTestFramework):
         assert_equal(False,             unspent_cb[0]['change'])
         assert_equal(txid_1,            unspent_cb[0]['txid'])
         assert_equal(True,              unspent_cb[0]['spendable'])
-        assert_equal(saplingzaddr,       unspent_cb[0]['address'])
+        assert_equal(saplingzaddr,      unspent_cb[0]['address'])
         assert_equal(receive_amount_10, unspent_cb[0]['amount'])
 
         # Send 0.001 (actually 0.0009) from saplingzaddr to a new zaddr
+        self.nodes[0].generate(1)
+        self.sync_all()
         receive_amount_point_1 = Decimal('0.001') - Decimal('0.0001')
         saplingzaddr2 = self.nodes[0].z_getnewaddress('sapling')
-        from pprint import pprint as pp
         pp(self.nodes[0].z_listreceivedbyaddress(saplingzaddr))
         recipients = [{"address": saplingzaddr2, "amount": receive_amount_point_1}]
         myopid2 = self.nodes[0].z_sendmany(saplingzaddr, recipients)

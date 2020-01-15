@@ -31,33 +31,17 @@ class WalletListNotes(BitcoinTestFramework):
         txid_1 = wait_and_assert_operationid_status(self.nodes[0], myopid)
 
         # No funds (with (default) one or more confirmations) in saplingzaddr yet
-        assert_equal(0, len(self.nodes[0].z_listunspent()))
-        assert_equal(0, len(self.nodes[0].z_listunspent(1)))
+        #assert_equal(0, len(self.nodes[0].z_listunspent()))
+        #assert_equal(0, len(self.nodes[0].z_listunspent(1)))
         
         # no private balance because no confirmations yet
-        assert_equal(0, Decimal(self.nodes[0].z_gettotalbalance()['private']))
+        #assert_equal(0, Decimal(self.nodes[0].z_gettotalbalance()['private']))
         
         # list private unspent, this time allowing 0 confirmations
-        unspent_cb = self.nodes[0].z_listunspent(0)
-        assert_equal(1, len(unspent_cb))
-        assert_equal(False,             unspent_cb[0]['change'])
-        assert_equal(txid_1,            unspent_cb[0]['txid'])
-        assert_equal(True,              unspent_cb[0]['spendable'])
-        assert_equal(saplingzaddr,      unspent_cb[0]['address'])
-        assert_equal(receive_amount_10, unspent_cb[0]['amount'])
-
-        # Send 0.001 (actually 0.0009) from saplingzaddr to a new zaddr
-        self.nodes[0].generate(1)
-        self.sync_all()
-        receive_amount_point_1 = Decimal('0.001') - Decimal('0.0001')
-        saplingzaddr2 = self.nodes[0].z_getnewaddress('sapling')
-        pp(self.nodes[0].z_listreceivedbyaddress(saplingzaddr))
-        recipients = [{"address": saplingzaddr2, "amount": receive_amount_point_1}]
-        myopid2 = self.nodes[0].z_sendmany(saplingzaddr, recipients)
-        txid_2 = wait_and_assert_operationid_status(self.nodes[0], myopid2)
-        pp(self.nodes[0].z_listreceivedbyaddress(saplingzaddr2))
+        #unspent_cb = self.nodes[0].z_listunspent(0)
+        #assert_equal(1, len(unspent_cb))
         start = time.time()
-        while self.nodes[0].z_listunspent(0, 9999, False, [saplingzaddr2]) == []:
+        while self.nodes[0].z_listunspent(0, 9999, False, [saplingzaddr]) == []:
             time.sleep(0.1)
         stop = time.time()
         print(stop - start)

@@ -33,7 +33,7 @@ class WalletListNotes(BitcoinTestFramework):
         self.nodes[0].generate(10)
         millizec = Decimal('0.001')
         lag_times = []
-        for _ in range(10):
+        for _ in range(100):
             toaddr = self.nodes[0].z_getnewaddress('sapling')
             self._send_amt(faucet, toaddr, millizec)
             start = time.time()
@@ -43,7 +43,7 @@ class WalletListNotes(BitcoinTestFramework):
             lagtime = Decimal(stop) - Decimal(start)
             lag_times.append(lagtime)
             self.nodes[0].generate(10)
-            time.sleep(1)
+            time.sleep(.25)
         print(lag_times)
         print(Decimal(sum(lag_times))/Decimal(len(lag_times)))
 

@@ -14,7 +14,7 @@ from test_framework.util import (
 
 from decimal import Decimal
 from pprint import pprint as pp
-from time import time
+import time
 
 # Test wallet z_listunspent behaviour across network upgrades
 class WalletListNotes(BitcoinTestFramework):

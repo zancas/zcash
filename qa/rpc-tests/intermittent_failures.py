@@ -38,6 +38,8 @@ class WalletListNotes(BitcoinTestFramework):
         myopid = self.nodes[0].z_sendmany(saplingzaddr, recipients)
         self.nodes[0].generate(100)
         self.sync_all()
+        import time
+        time.sleep(10)
         print("Receivedby zaddr2: ")
         pp(self.nodes[0].z_listreceivedbyaddress(saplingzaddr2))
         

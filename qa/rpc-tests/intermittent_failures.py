@@ -45,6 +45,8 @@ class WalletListNotes(BitcoinTestFramework):
             print(txid_2)
         
             # list unspent, allowing 0conf txs
+            import time
+            time.sleep(10)
             unspent_tx = self.nodes[0].z_listunspent(0)
             message = "The count at failure was: %s" % count
             message += " and the unspent_tx was: %s" % unspent_tx

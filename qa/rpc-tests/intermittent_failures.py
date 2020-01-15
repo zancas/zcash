@@ -57,10 +57,10 @@ class WalletListNotes(BitcoinTestFramework):
         txid_2 = wait_and_assert_operationid_status(self.nodes[0], myopid2)
         pp(self.nodes[0].z_listreceivedbyaddress(saplingzaddr2))
         start = time.time()
-        while self.nodes[0].z_listreceivedbyaddress(saplingzaddr2) == []:
+        while self.nodes[0].z_listunspent(0, 9999, False, [saplingzaddr2]) == []:
             time.sleep(0.1)
         stop = time.time()
-        print(stop-start)
+        print(stop - start)
         
         '''
         count = 0

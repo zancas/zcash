@@ -35,7 +35,9 @@ class WalletListNotes(BitcoinTestFramework):
             while self.nodes[0].z_listunspent(0, 9999, False, [toaddr]) == []:
                 time.sleep(0.001)
             stop = time.time()
-            lag_times.append(stop - start)
+            lagtime = Decimal(stop) - Decimal(start)
+            lag_times.append(lagtime)
+            print(lagtime)
         print(lag_times)
         print(Decimal(sum(lag_times))/Decimal(len(lag_times)))
 

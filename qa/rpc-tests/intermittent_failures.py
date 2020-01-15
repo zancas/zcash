@@ -37,7 +37,7 @@ class WalletListNotes(BitcoinTestFramework):
         count = 0
         self.nodes[0].generate(101)
         self.sync_all()
-        while count < 1000:
+        while count < 3:
             count = count + 1
             print("We are inside the %s th iteration of the for loop!" % count)
             myopid = self.nodes[0].z_sendmany(saplingzaddr, recipients)

@@ -36,7 +36,6 @@ class WalletListNotes(BitcoinTestFramework):
         pp(self.nodes[0].z_listreceivedbyaddress(saplingzaddr))
         recipients = [{"address": saplingzaddr2, "amount": receive_amount_point_1}]
         myopid = self.nodes[0].z_sendmany(saplingzaddr, recipients)
-        self.nodes[0].generate(100)
         self.sync_all()
         import time
         time.sleep(10)

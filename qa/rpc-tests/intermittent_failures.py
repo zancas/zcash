@@ -28,7 +28,7 @@ class WalletListNotes(BitcoinTestFramework):
         receive_amount_10 = Decimal('10.0') - Decimal('0.0001')
         # Send 9.9999 ZEC to a z-addr
         saplingzaddr = self.nodes[0].z_getnewaddress('sapling')
-        txid_1 = self._send_amt(get_coinbase_address(self.nodes[0]), saplingzaddr)
+        txid_1 = self._send_amt(get_coinbase_address(self.nodes[0]), saplingzaddr, receive_amount_10)
 
         start = time.time()
         while self.nodes[0].z_listunspent(0, 9999, False, [saplingzaddr]) == []:

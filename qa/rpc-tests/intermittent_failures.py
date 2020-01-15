@@ -38,9 +38,9 @@ class WalletListNotes(BitcoinTestFramework):
         while count < 3:
             count = count + 1
             print("We are inside the %s th iteration of the for loop!" % count)
+            print("saplingzaddr: %s" % saplingzaddr)
             myopid = self.nodes[0].z_sendmany(saplingzaddr, recipients)
             txid_2 = wait_and_assert_operationid_status(self.nodes[0], myopid)
-            print(txid_2)
         
             # list unspent, allowing 0conf txs
             unspent_tx = self.nodes[0].z_listunspent(0)

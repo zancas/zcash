@@ -50,8 +50,6 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
         print("Lag Loop Completed,")
         print("lagtimes are:")
         print(json.loads(str([str(x) for x in lag_times]).replace("'", '"')))
-        print("Mean lagtime is: ")
-        print(Decimal(sum(lag_times))/Decimal(len(lag_times)))
 
 if __name__ == '__main__':
     ZGetOperationResultsLatentSuccess().main()

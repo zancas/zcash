@@ -26,8 +26,8 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
         coinbase_addr = get_coinbase_address(self.nodes[0])
         self.nodes[0].generate(10)
         faucet = self.nodes[0].z_getnewaddress('sapling')
-        blockreward = Decimal('9.999')
-        self._send_amt(coinbase_addr, faucet, blockreward)
+        breward_minus_tx_fee = Decimal('9.9999')
+        self._send_amt(coinbase_addr, faucet, breward_minus_tx_fee)
         self.nodes[0].generate(10)
         millizec = Decimal('0.001')
         lag_times = []
@@ -47,10 +47,11 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
             self.sync_all()
             sync_stop = time.time()
             sync_times.append(sync_stop - sync_start)
-        print(lag_times)
+        print("Lag Loop Completed,")
+        print("lagtimes are: ")
+        print(json.loads(lag_times))
+        print("Mean lagtime is: ")
         print(Decimal(sum(lag_times))/Decimal(len(lag_times)))
-        json.dump(lag_times, open("latencydata/withsyncall_lagtimes.json", "w"))
-        json.dump(sync_times, open("latencydata/synctimes.json", "w"))
 
 if __name__ == '__main__':
     ZGetOperationResultsLatentSuccess().main()

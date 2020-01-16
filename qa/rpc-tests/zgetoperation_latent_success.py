@@ -11,7 +11,7 @@ from test_framework.util import (
 )
 
 from decimal import Decimal
-from pprint import pprint as pp
+import simplejson as json
 import time
 
 # Test wallet z_listunspent behaviour across network upgrades
@@ -31,7 +31,8 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
         self.nodes[0].generate(10)
         millizec = Decimal('0.001')
         lag_times = []
-        for iteration in range(1):
+        sync_times = []
+        for iteration in range(20):
             print("Iteration: %s" % iteration)
             toaddr = self.nodes[0].z_getnewaddress('sapling')
             self._send_amt(faucet, toaddr, millizec)
@@ -45,12 +46,11 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
             sync_start = time.time()
             self.sync_all()
             sync_stop = time.time()
-            print("sync_all took:")
-            print(sync_stop - sync_start)
+            sync_times.append(sync_stop - sync_start)
         print(lag_times)
         print(Decimal(sum(lag_times))/Decimal(len(lag_times)))
-        import simplejson as json
-        json.dump(lag_times, open("lagtimes.json"))
+        json.dump(lag_times, open("latencydata/withsyncall_lagtimes.json", "w"))
+        json.dump(sync_times, open("latencydata/synctimes.json", "w"))
 
 if __name__ == '__main__':
     ZGetOperationResultsLatentSuccess().main()

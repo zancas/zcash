@@ -3,6 +3,12 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://www.opensource.org/licenses/mit-license.php .
 
+"""This isn't a standard RPC integration test, rather it's an experiment aimed at isolating sources
+of intermittent failures in the test suite.
+
+The wait_and_assert_oprationid_status function 
+"""
+
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_equal,
@@ -35,7 +41,10 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
         for iteration in range(20):
             print("Iteration: %s" % iteration)
             toaddr = self.nodes[0].z_getnewaddress('sapling')
-            self._send_amt(faucet, toaddr, millizec)
+            if self._send_amt(faucet, toaddr, millizec) is None:
+                print("Unexpected failure to send ZEC!")
+                import sys
+                sys.exit(57)
             start = time.time()
             while self.nodes[0].z_listunspent(0, 9999, False, [toaddr]) == []:
                 time.sleep(0.001)

@@ -6,7 +6,10 @@
 """This isn't a standard RPC integration test, rather it's an experiment aimed at isolating sources
 of intermittent failures in the test suite.
 
-The wait_and_assert_oprationid_status function 
+The wait_and_assert_oprationid_status function catches exceptions, and error states, only returning
+a txid if a successful transaction was reported for the operation <-- Hmmm...
+
+
 """
 
 from test_framework.test_framework import BitcoinTestFramework

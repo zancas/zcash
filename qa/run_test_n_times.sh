@@ -61,7 +61,7 @@ do
                 echo ${USAGE}
                 exit 13
             fi
-            pushd ${REPO_NAME} > /dev/null && git rev-parse HEAD > /dev/null;
+            pushd ${REPO_NAME} > /dev/null && git rev-parse --short HEAD > /dev/null;
             if [ $? -ne 0 ]
             then
                 echo The named directory: ${OPTARG}

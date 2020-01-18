@@ -15,7 +15,7 @@ a txid if a successful transaction was reported for the operation <-- Hmmm...
 import sys
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import get_coinbase_address
-)
+
 
 from decimal import Decimal
 import simplejson as json

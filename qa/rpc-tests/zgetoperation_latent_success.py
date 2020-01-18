@@ -12,11 +12,9 @@ a txid if a successful transaction was reported for the operation <-- Hmmm...
 
 """
 
+import sys
 from test_framework.test_framework import BitcoinTestFramework
-from test_framework.util import (
-    assert_equal,
-    get_coinbase_address,
-    wait_and_assert_operationid_status,
+from test_framework.util import get_coinbase_address
 )
 
 from decimal import Decimal
@@ -29,12 +27,14 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
     def _send_amt(self, from_addr, to_addr, amnt):
         recipients = [{"address": to_addr, "amount": amnt}]
         myopid = self.nodes[0].z_sendmany(from_addr, recipients)
-        for _ in range(1, timeout):
+        for _ in range(1, 3000):
             results = node.z_getoperationresult([myopid])
             if len(results) > 0:
                 result = results[0]
                 break
             time.sleep(.01)
+        if result['status'] != 'success':
+            sys.exit(56)
         return wait_and_assert_operationid_status(self.nodes[0], myopid)
 
     def run_test(self):
@@ -50,10 +50,7 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
         for iteration in range(20):
             print("Iteration: %s" % iteration)
             toaddr = self.nodes[0].z_getnewaddress('sapling')
-            if self._send_amt(faucet, toaddr, millizec) is None:
-                print("Unexpected failure to send ZEC!")
-                import sys
-                sys.exit(57)
+            self._send_amt(faucet, toaddr, millizec)
             start = time.time()
             while self.nodes[0].z_listunspent(0, 9999, False, [toaddr]) == []:
                 time.sleep(0.001)

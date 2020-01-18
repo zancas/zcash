@@ -28,14 +28,14 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
         recipients = [{"address": to_addr, "amount": amnt}]
         myopid = self.nodes[0].z_sendmany(from_addr, recipients)
         for _ in range(1, 3000):
-            results = node.z_getoperationresult([myopid])
+            results = self.nodes[0].z_getoperationresult([myopid])
             if len(results) > 0:
                 result = results[0]
                 break
             time.sleep(.01)
         if result['status'] != 'success':
             sys.exit(56)
-        return wait_and_assert_operationid_status(self.nodes[0], myopid)
+        return result # NOTE:  This test doesn't actually use this.
 
     def run_test(self):
         coinbase_addr = get_coinbase_address(self.nodes[0])
@@ -47,7 +47,7 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
         millizec = Decimal('0.001')
         lag_times = []
         sync_times = []
-        for iteration in range(20):
+        for iteration in range(1):
             print("Iteration: %s" % iteration)
             toaddr = self.nodes[0].z_getnewaddress('sapling')
             self._send_amt(faucet, toaddr, millizec)

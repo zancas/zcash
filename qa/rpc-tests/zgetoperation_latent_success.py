@@ -29,6 +29,12 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
     def _send_amt(self, from_addr, to_addr, amnt):
         recipients = [{"address": to_addr, "amount": amnt}]
         myopid = self.nodes[0].z_sendmany(from_addr, recipients)
+        for _ in range(1, timeout):
+            results = node.z_getoperationresult([myopid])
+            if len(results) > 0:
+                result = results[0]
+                break
+            time.sleep(.01)
         return wait_and_assert_operationid_status(self.nodes[0], myopid)
 
     def run_test(self):

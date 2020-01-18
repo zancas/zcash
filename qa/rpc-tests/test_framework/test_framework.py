@@ -12,6 +12,7 @@ import sys
 import shutil
 import tempfile
 import traceback
+import unittest
 
 from .authproxy import JSONRPCException
 from .util import assert_equal, check_json_precision, \
@@ -20,7 +21,7 @@ from .util import assert_equal, check_json_precision, \
     sync_blocks, sync_mempools, wait_bitcoinds
 
 
-class BitcoinTestFramework(object):
+class BitcoinTestFramework(unittest.TestCase):
 
     # These may be over-ridden by subclasses:
     def run_test(self):

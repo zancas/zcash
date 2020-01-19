@@ -43,7 +43,8 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
         faucet = self.nodes[0].z_getnewaddress('sapling')
         breward_minus_tx_fee = Decimal('9.9999')
         self._send_amt(coinbase_addr, faucet, breward_minus_tx_fee)
-        self.nodes[0].generate(10)
+        self.nodes[0].generate(1)
+        time.sleep(0.95)
         millizec = Decimal('0.001')
         lag_times = []
         toaddr = self.nodes[0].z_getnewaddress('sapling')

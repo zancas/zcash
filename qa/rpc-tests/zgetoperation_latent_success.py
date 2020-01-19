@@ -57,6 +57,7 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
             lagtime = Decimal(stop) - Decimal(start)
             lag_times.append(lagtime)
             print("lagtime: %s" % lagtime)
+            time.sleep(1)
         print("Lag Loop Completed,")
         print("lagtimes are:")
         print(json.loads(str([str(x) for x in lag_times]).replace("'", '"')))

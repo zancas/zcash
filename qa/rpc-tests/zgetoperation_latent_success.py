@@ -37,14 +37,17 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
             sys.exit(56)
         return result # NOTE:  This test doesn't actually use this.
 
+    def confirm_and_stabilize(self):
+        self.nodes[0].generate(1)
+        time.sleep(0.95)
+
     def run_test(self):
         coinbase_addr = get_coinbase_address(self.nodes[0])
-        self.nodes[0].generate(10)
+        self.confirm_and_stabilize()
         faucet = self.nodes[0].z_getnewaddress('sapling')
         breward_minus_tx_fee = Decimal('9.9999')
         self._send_amt(coinbase_addr, faucet, breward_minus_tx_fee)
-        self.nodes[0].generate(1)
-        time.sleep(0.95)
+        self.confirm_and_stabilize()
         millizec = Decimal('0.001')
         lag_times = []
         toaddr = self.nodes[0].z_getnewaddress('sapling')
@@ -57,11 +60,7 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
             stop = time.time()
             lagtime = Decimal(stop) - Decimal(start)
             lag_times.append(lagtime)
-            start_generate = time.time()
-            self.nodes[0].generate(1)
-            time.sleep(0.95)
-            stop_generate = time.time()
-            print("sleep time = %s" % (stop_generate - start_generate))
+            self.confirm_and_stabilize()
             print("lagtime: %s" % lagtime)
         print("Lag Loop Completed,")
         print("lagtimes are:")

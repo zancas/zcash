@@ -52,7 +52,6 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
         lag_times = []
         toaddr = self.nodes[0].z_getnewaddress('sapling')
         for iteration in range(1000):
-            print("Iteration: %s" % iteration)
             self._send_amt(faucet, toaddr, millizec)
             start = time.time()
             while len(self.nodes[0].z_listunspent(0, 9999, False, [toaddr])) == iteration:
@@ -61,7 +60,7 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
             lagtime = Decimal(stop) - Decimal(start)
             lag_times.append(lagtime)
             self.confirm_and_stabilize()
-            print("lagtime: %s" % lagtime)
+            print("Iteration: %s, lagtime: %s" % (iteration, lagtime))
         print("Lag Loop Completed,")
         print("lagtimes are:")
         print(json.loads(str([str(x) for x in lag_times]).replace("'", '"')))

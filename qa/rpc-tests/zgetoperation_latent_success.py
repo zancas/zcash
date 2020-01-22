@@ -27,15 +27,14 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
     def _send_amt(self, from_addr, to_addr, amnt):
         recipients = [{"address": to_addr, "amount": amnt}]
         myopid = self.nodes[0].z_sendmany(from_addr, recipients)
-        for _ in range(1, 3000):
+        for _ in range(1, 30000):
             results = self.nodes[0].z_getoperationresult([myopid])
             if len(results) > 0:
-                result = results[0]
                 break
             time.sleep(.01)
-        if result['status'] != 'success':
+        if results[0]['status'] != 'success':
             sys.exit(56)
-        return result # NOTE:  This test doesn't actually use this.
+        return results[0] # NOTE:  This test doesn't actually use this.
 
     def confirm_and_stabilize(self):
         self.nodes[0].generate(1)

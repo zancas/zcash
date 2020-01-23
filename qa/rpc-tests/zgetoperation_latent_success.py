@@ -37,6 +37,8 @@ class ZGetOperationResultsLatentSuccess(BitcoinTestFramework):
         return results[0] # NOTE:  This test doesn't actually use this.
 
     def confirm_and_stabilize(self):
+        # Because we are sending from a zaddr there must be a confirmation:
+        # https://zcash.readthedocs.io/en/latest/rtd_pages/payment_api.html#payment
         self.nodes[0].generate(1)
         time.sleep(0.95)
 

@@ -31,7 +31,7 @@ createArgs(int nRequired, const char* address1=NULL, const char* address2=NULL)
     return result;
 }
 
-UniValue CallRPC(string args)
+UniValue TestCallRPC(string args)
 {
     vector<string> vArgs;
     boost::split(vArgs, args, boost::is_any_of(" \t"));
@@ -58,8 +58,8 @@ UniValue CallRPC(string args)
 
 void CheckRPCThrows(std::string rpcString, std::string expectedErrorMessage) {
     try {
-        CallRPC(rpcString);
-        // Note: CallRPC catches (const UniValue& objError) and rethrows a runtime_error
+        TestCallRPC(rpcString);
+        // Note: TestCallRPC catches (const UniValue& objError) and rethrows a runtime_error
         BOOST_FAIL("Should have caused an error");
     } catch (const std::runtime_error& e) {
         BOOST_CHECK_EQUAL(expectedErrorMessage, e.what());
@@ -76,44 +76,44 @@ BOOST_AUTO_TEST_CASE(rpc_rawparams)
     // Test raw transaction API argument handling
     UniValue r;
 
-    BOOST_CHECK_THROW(CallRPC("getrawtransaction"), runtime_error);
-    BOOST_CHECK_THROW(CallRPC("getrawtransaction not_hex"), runtime_error);
-    BOOST_CHECK_THROW(CallRPC("getrawtransaction a3b807410df0b60fcb9736768df5823938b2f838694939ba45f3c0a1bff150ed not_int"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC("getrawtransaction"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC("getrawtransaction not_hex"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC("getrawtransaction a3b807410df0b60fcb9736768df5823938b2f838694939ba45f3c0a1bff150ed not_int"), runtime_error);
 
-    BOOST_CHECK_THROW(CallRPC("createrawtransaction"), runtime_error);
-    BOOST_CHECK_THROW(CallRPC("createrawtransaction null null"), runtime_error);
-    BOOST_CHECK_THROW(CallRPC("createrawtransaction not_array"), runtime_error);
-    BOOST_CHECK_THROW(CallRPC("createrawtransaction [] []"), runtime_error);
-    BOOST_CHECK_THROW(CallRPC("createrawtransaction {} {}"), runtime_error);
-    BOOST_CHECK_NO_THROW(CallRPC("createrawtransaction [] {}"));
-    BOOST_CHECK_THROW(CallRPC("createrawtransaction [] {} extra"), runtime_error);
-    BOOST_CHECK_NO_THROW(CallRPC("createrawtransaction [] {} 0"));
-    BOOST_CHECK_THROW(CallRPC("createrawtransaction [] {} 0 0"), runtime_error); // Overwinter is not active
+    BOOST_CHECK_THROW(TestCallRPC("createrawtransaction"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC("createrawtransaction null null"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC("createrawtransaction not_array"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC("createrawtransaction [] []"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC("createrawtransaction {} {}"), runtime_error);
+    BOOST_CHECK_NO_THROW(TestCallRPC("createrawtransaction [] {}"));
+    BOOST_CHECK_THROW(TestCallRPC("createrawtransaction [] {} extra"), runtime_error);
+    BOOST_CHECK_NO_THROW(TestCallRPC("createrawtransaction [] {} 0"));
+    BOOST_CHECK_THROW(TestCallRPC("createrawtransaction [] {} 0 0"), runtime_error); // Overwinter is not active
 
-    BOOST_CHECK_THROW(CallRPC("decoderawtransaction"), runtime_error);
-    BOOST_CHECK_THROW(CallRPC("decoderawtransaction null"), runtime_error);
-    BOOST_CHECK_THROW(CallRPC("decoderawtransaction DEADBEEF"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC("decoderawtransaction"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC("decoderawtransaction null"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC("decoderawtransaction DEADBEEF"), runtime_error);
     string rawtx = "0100000001a15d57094aa7a21a28cb20b59aab8fc7d1149a3bdbcddba9c622e4f5f6a99ece010000006c493046022100f93bb0e7d8db7bd46e40132d1f8242026e045f03a0efe71bbb8e3f475e970d790221009337cd7f1f929f00cc6ff01f03729b069a7c21b59b1736ddfee5db5946c5da8c0121033b9b137ee87d5a812d6f506efdd37f0affa7ffc310711c06c7f3e097c9447c52ffffffff0100e1f505000000001976a9140389035a9225b3839e2bbf32d826a1e222031fd888ac00000000";
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("decoderawtransaction ")+rawtx));
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("decoderawtransaction ")+rawtx));
     BOOST_CHECK_EQUAL(find_value(r.get_obj(), "version").get_int(), 1);
     BOOST_CHECK_EQUAL(find_value(r.get_obj(), "locktime").get_int(), 0);
-    BOOST_CHECK_THROW(r = CallRPC(string("decoderawtransaction ")+rawtx+" extra"), runtime_error);
+    BOOST_CHECK_THROW(r = TestCallRPC(string("decoderawtransaction ")+rawtx+" extra"), runtime_error);
 
-    BOOST_CHECK_THROW(CallRPC("signrawtransaction"), runtime_error);
-    BOOST_CHECK_THROW(CallRPC("signrawtransaction null"), runtime_error);
-    BOOST_CHECK_THROW(CallRPC("signrawtransaction ff00"), runtime_error);
-    BOOST_CHECK_NO_THROW(CallRPC(string("signrawtransaction ")+rawtx));
-    BOOST_CHECK_NO_THROW(CallRPC(string("signrawtransaction ")+rawtx+" null null NONE|ANYONECANPAY"));
-    BOOST_CHECK_NO_THROW(CallRPC(string("signrawtransaction ")+rawtx+" [] [] NONE|ANYONECANPAY"));
-    BOOST_CHECK_THROW(CallRPC(string("signrawtransaction ")+rawtx+" null null badenum"), runtime_error);
-    BOOST_CHECK_NO_THROW(CallRPC(string("signrawtransaction ")+rawtx+" [] [] NONE|ANYONECANPAY 5ba81b19"));
-    BOOST_CHECK_THROW(CallRPC(string("signrawtransaction ")+rawtx+" [] [] ALL NONE|ANYONECANPAY 123abc"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC("signrawtransaction"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC("signrawtransaction null"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC("signrawtransaction ff00"), runtime_error);
+    BOOST_CHECK_NO_THROW(TestCallRPC(string("signrawtransaction ")+rawtx));
+    BOOST_CHECK_NO_THROW(TestCallRPC(string("signrawtransaction ")+rawtx+" null null NONE|ANYONECANPAY"));
+    BOOST_CHECK_NO_THROW(TestCallRPC(string("signrawtransaction ")+rawtx+" [] [] NONE|ANYONECANPAY"));
+    BOOST_CHECK_THROW(TestCallRPC(string("signrawtransaction ")+rawtx+" null null badenum"), runtime_error);
+    BOOST_CHECK_NO_THROW(TestCallRPC(string("signrawtransaction ")+rawtx+" [] [] NONE|ANYONECANPAY 5ba81b19"));
+    BOOST_CHECK_THROW(TestCallRPC(string("signrawtransaction ")+rawtx+" [] [] ALL NONE|ANYONECANPAY 123abc"), runtime_error);
 
     // Only check failure cases for sendrawtransaction, there's no network to send to...
-    BOOST_CHECK_THROW(CallRPC("sendrawtransaction"), runtime_error);
-    BOOST_CHECK_THROW(CallRPC("sendrawtransaction null"), runtime_error);
-    BOOST_CHECK_THROW(CallRPC("sendrawtransaction DEADBEEF"), runtime_error);
-    BOOST_CHECK_THROW(CallRPC(string("sendrawtransaction ")+rawtx+" extra"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC("sendrawtransaction"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC("sendrawtransaction null"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC("sendrawtransaction DEADBEEF"), runtime_error);
+    BOOST_CHECK_THROW(TestCallRPC(string("sendrawtransaction ")+rawtx+" extra"), runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(rpc_rawsign)
@@ -124,14 +124,14 @@ BOOST_AUTO_TEST_CASE(rpc_rawsign)
       "[{\"txid\":\"b4cc287e58f87cdae59417329f710f3ecd75a4ee1d2872b7248f50977c8493f3\","
       "\"vout\":1,\"scriptPubKey\":\"a914b10c9df5f7edf436c697f02f1efdba4cf399615187\","
       "\"redeemScript\":\"512103debedc17b3df2badbcdd86d5feb4562b86fe182e5998abd8bcd4f122c6155b1b21027e940bb73ab8732bfdf7f9216ecefca5b94d6df834e77e108f68e66f126044c052ae\"}]";
-    r = CallRPC(string("createrawtransaction ")+prevout+" "+
+    r = TestCallRPC(string("createrawtransaction ")+prevout+" "+
       "{\"t3ahmeUm2LWXPUJPx9QMheGtqTEfdDdgr7p\":11}");
     string notsigned = r.get_str();
     string privkey1 = "\"KzsXybp9jX64P5ekX1KUxRQ79Jht9uzW7LorgwE65i5rWACL6LQe\"";
     string privkey2 = "\"Kyhdf5LuKTRx4ge69ybABsiUAWjVRK4XGxAKk2FQLp2HjGMy87Z4\"";
-    r = CallRPC(string("signrawtransaction ")+notsigned+" "+prevout+" "+"[]");
+    r = TestCallRPC(string("signrawtransaction ")+notsigned+" "+prevout+" "+"[]");
     BOOST_CHECK(find_value(r.get_obj(), "complete").get_bool() == false);
-    r = CallRPC(string("signrawtransaction ")+notsigned+" "+prevout+" "+"["+privkey1+","+privkey2+"]");
+    r = TestCallRPC(string("signrawtransaction ")+notsigned+" "+prevout+" "+"["+privkey1+","+privkey2+"]");
     BOOST_CHECK(find_value(r.get_obj(), "complete").get_bool() == true);
 }
 
@@ -233,23 +233,23 @@ BOOST_AUTO_TEST_CASE(json_parse_errors)
 
 BOOST_AUTO_TEST_CASE(rpc_ban)
 {
-    BOOST_CHECK_NO_THROW(CallRPC(string("clearbanned")));
+    BOOST_CHECK_NO_THROW(TestCallRPC(string("clearbanned")));
     
     UniValue r;
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("setban 127.0.0.0 add")));
-    BOOST_CHECK_THROW(r = CallRPC(string("setban 127.0.0.0:8334")), runtime_error); //portnumber for setban not allowed
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("listbanned")));
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("setban 127.0.0.0 add")));
+    BOOST_CHECK_THROW(r = TestCallRPC(string("setban 127.0.0.0:8334")), runtime_error); //portnumber for setban not allowed
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("listbanned")));
     UniValue ar = r.get_array();
     UniValue o1 = ar[0].get_obj();
     UniValue adr = find_value(o1, "address");
     BOOST_CHECK_EQUAL(adr.get_str(), "127.0.0.0/255.255.255.255");
-    BOOST_CHECK_NO_THROW(CallRPC(string("setban 127.0.0.0 remove")));;
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("listbanned")));
+    BOOST_CHECK_NO_THROW(TestCallRPC(string("setban 127.0.0.0 remove")));;
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("listbanned")));
     ar = r.get_array();
     BOOST_CHECK_EQUAL(ar.size(), 0);
 
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("setban 127.0.0.0/24 add 1607731200 true")));
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("listbanned")));
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("setban 127.0.0.0/24 add 1607731200 true")));
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("listbanned")));
     ar = r.get_array();
     o1 = ar[0].get_obj();
     adr = find_value(o1, "address");
@@ -257,10 +257,10 @@ BOOST_AUTO_TEST_CASE(rpc_ban)
     BOOST_CHECK_EQUAL(adr.get_str(), "127.0.0.0/255.255.255.0");
     BOOST_CHECK_EQUAL(banned_until.get_int64(), 1607731200); // absolute time check
 
-    BOOST_CHECK_NO_THROW(CallRPC(string("clearbanned")));
+    BOOST_CHECK_NO_THROW(TestCallRPC(string("clearbanned")));
 
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("setban 127.0.0.0/24 add 200")));
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("listbanned")));
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("setban 127.0.0.0/24 add 200")));
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("listbanned")));
     ar = r.get_array();
     o1 = ar[0].get_obj();
     adr = find_value(o1, "address");
@@ -271,43 +271,43 @@ BOOST_AUTO_TEST_CASE(rpc_ban)
     BOOST_CHECK(banned_until.get_int64()-now <= 200);
 
     // must throw an exception because 127.0.0.1 is in already banned subnet range
-    BOOST_CHECK_THROW(r = CallRPC(string("setban 127.0.0.1 add")), runtime_error);
+    BOOST_CHECK_THROW(r = TestCallRPC(string("setban 127.0.0.1 add")), runtime_error);
 
-    BOOST_CHECK_NO_THROW(CallRPC(string("setban 127.0.0.0/24 remove")));;
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("listbanned")));
+    BOOST_CHECK_NO_THROW(TestCallRPC(string("setban 127.0.0.0/24 remove")));;
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("listbanned")));
     ar = r.get_array();
     BOOST_CHECK_EQUAL(ar.size(), 0);
 
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("setban 127.0.0.0/255.255.0.0 add")));
-    BOOST_CHECK_THROW(r = CallRPC(string("setban 127.0.1.1 add")), runtime_error);
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("setban 127.0.0.0/255.255.0.0 add")));
+    BOOST_CHECK_THROW(r = TestCallRPC(string("setban 127.0.1.1 add")), runtime_error);
 
-    BOOST_CHECK_NO_THROW(CallRPC(string("clearbanned")));
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("listbanned")));
+    BOOST_CHECK_NO_THROW(TestCallRPC(string("clearbanned")));
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("listbanned")));
     ar = r.get_array();
     BOOST_CHECK_EQUAL(ar.size(), 0);
 
 
-    BOOST_CHECK_THROW(r = CallRPC(string("setban test add")), runtime_error); //invalid IP
+    BOOST_CHECK_THROW(r = TestCallRPC(string("setban test add")), runtime_error); //invalid IP
 
     //IPv6 tests
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("setban FE80:0000:0000:0000:0202:B3FF:FE1E:8329 add")));
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("listbanned")));
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("setban FE80:0000:0000:0000:0202:B3FF:FE1E:8329 add")));
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("listbanned")));
     ar = r.get_array();
     o1 = ar[0].get_obj();
     adr = find_value(o1, "address");
     BOOST_CHECK_EQUAL(adr.get_str(), "fe80::202:b3ff:fe1e:8329/ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff");
 
-    BOOST_CHECK_NO_THROW(CallRPC(string("clearbanned")));
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("setban 2001:db8::/30 add")));
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("listbanned")));
+    BOOST_CHECK_NO_THROW(TestCallRPC(string("clearbanned")));
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("setban 2001:db8::/30 add")));
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("listbanned")));
     ar = r.get_array();
     o1 = ar[0].get_obj();
     adr = find_value(o1, "address");
     BOOST_CHECK_EQUAL(adr.get_str(), "2001:db8::/ffff:fffc:0:0:0:0:0:0");
 
-    BOOST_CHECK_NO_THROW(CallRPC(string("clearbanned")));
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("setban 2001:4d48:ac57:400:cacf:e9ff:fe1d:9c63/128 add")));
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("listbanned")));
+    BOOST_CHECK_NO_THROW(TestCallRPC(string("clearbanned")));
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("setban 2001:4d48:ac57:400:cacf:e9ff:fe1d:9c63/128 add")));
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("listbanned")));
     ar = r.get_array();
     o1 = ar[0].get_obj();
     adr = find_value(o1, "address");
@@ -328,10 +328,10 @@ BOOST_AUTO_TEST_CASE(rpc_raw_create_overwinter_v3)
     std::string prevout =
       "[{\"txid\":\"b4cc287e58f87cdae59417329f710f3ecd75a4ee1d2872b7248f50977c8493f3\","
       "\"vout\":1}]";
-    r = CallRPC(string("createrawtransaction ") + prevout + " " +
+    r = TestCallRPC(string("createrawtransaction ") + prevout + " " +
       "{\"tmHU5HLMu3yS8eoNvbrU1NWeJaGf6jxehru\":11}");
     std::string rawhex = r.get_str();
-    BOOST_CHECK_NO_THROW(r = CallRPC(string("decoderawtransaction ") + rawhex));
+    BOOST_CHECK_NO_THROW(r = TestCallRPC(string("decoderawtransaction ") + rawhex));
     BOOST_CHECK_EQUAL(find_value(r.get_obj(), "overwintered").get_bool(), true);
     BOOST_CHECK_EQUAL(find_value(r.get_obj(), "version").get_int(), 3);
     BOOST_CHECK_EQUAL(find_value(r.get_obj(), "expiryheight").get_int(), 21);
@@ -355,9 +355,9 @@ BOOST_AUTO_TEST_CASE(rpc_raw_create_overwinter_v3)
 
 BOOST_AUTO_TEST_CASE(rpc_getnetworksolps)
 {
-    BOOST_CHECK_NO_THROW(CallRPC("getnetworksolps"));
-    BOOST_CHECK_NO_THROW(CallRPC("getnetworksolps 120"));
-    BOOST_CHECK_NO_THROW(CallRPC("getnetworksolps 120 -1"));
+    BOOST_CHECK_NO_THROW(TestCallRPC("getnetworksolps"));
+    BOOST_CHECK_NO_THROW(TestCallRPC("getnetworksolps 120"));
+    BOOST_CHECK_NO_THROW(TestCallRPC("getnetworksolps 120 -1"));
 }
 
 // Test parameter processing (not functionality).
@@ -399,11 +399,11 @@ BOOST_AUTO_TEST_CASE(rpc_insightexplorer)
 
     // must be a legal mainnet address
     const string addr = "t1T3G72ToPuCDTiCEytrU1VUBRHsNupEBut";
-    BOOST_CHECK_NO_THROW(CallRPC("getaddressmempool \"" + addr + "\""));
-    BOOST_CHECK_NO_THROW(CallRPC("getaddressmempool {\"addresses\":[\"" + addr + "\"]}"));
-    BOOST_CHECK_NO_THROW(CallRPC("getaddressmempool {\"addresses\":[\"" + addr + "\",\"" + addr + "\"]}")); 
+    BOOST_CHECK_NO_THROW(TestCallRPC("getaddressmempool \"" + addr + "\""));
+    BOOST_CHECK_NO_THROW(TestCallRPC("getaddressmempool {\"addresses\":[\"" + addr + "\"]}"));
+    BOOST_CHECK_NO_THROW(TestCallRPC("getaddressmempool {\"addresses\":[\"" + addr + "\",\"" + addr + "\"]}")); 
 
-    BOOST_CHECK_NO_THROW(CallRPC("getaddressutxos {\"addresses\":[],\"chainInfo\":true}"));
+    BOOST_CHECK_NO_THROW(TestCallRPC("getaddressutxos {\"addresses\":[],\"chainInfo\":true}"));
     CheckRPCThrows("getaddressutxos {}",
         "Addresses is expected to be an array");
     CheckRPCThrows("getaddressutxos {\"addressesmisspell\":[]}",
@@ -411,7 +411,7 @@ BOOST_AUTO_TEST_CASE(rpc_insightexplorer)
     CheckRPCThrows("getaddressutxos {\"addresses\":[],\"chainInfo\":1}",
         "JSON value is not a boolean as expected");
 
-    BOOST_CHECK_NO_THROW(CallRPC("getaddressdeltas {\"addresses\":[]}"));
+    BOOST_CHECK_NO_THROW(TestCallRPC("getaddressdeltas {\"addresses\":[]}"));
     CheckRPCThrows("getaddressdeltas {\"addresses\":[],\"start\":0,\"end\":0,\"chainInfo\":true}",
         "Start and end are expected to be greater than zero");
     CheckRPCThrows("getaddressdeltas {\"addresses\":[],\"start\":3,\"end\":2,\"chainInfo\":true}",
@@ -420,9 +420,9 @@ BOOST_AUTO_TEST_CASE(rpc_insightexplorer)
     CheckRPCThrows("getaddressdeltas {\"addresses\":[],\"start\":2,\"end\":3,\"chainInfo\":true}",
         "Start or end is outside chain range");
 
-    BOOST_CHECK_NO_THROW(CallRPC("getaddressbalance {\"addresses\":[]}"));
+    BOOST_CHECK_NO_THROW(TestCallRPC("getaddressbalance {\"addresses\":[]}"));
 
-    BOOST_CHECK_NO_THROW(CallRPC("getaddresstxids {\"addresses\":[]}"));
+    BOOST_CHECK_NO_THROW(TestCallRPC("getaddresstxids {\"addresses\":[]}"));
     CheckRPCThrows("getaddresstxids {\"addresses\":[],\"start\":0,\"end\":0,\"chainInfo\":true}",
         "Start and end are expected to be greater than zero");
     CheckRPCThrows("getaddresstxids {\"addresses\":[],\"start\":3,\"end\":2,\"chainInfo\":true}",
@@ -440,15 +440,15 @@ BOOST_AUTO_TEST_CASE(rpc_insightexplorer)
         "txid must be hexadecimal string (not 'hello')");
 
     // only the mainnet genesis block exists
-    BOOST_CHECK_NO_THROW(CallRPC("getblockdeltas \"00040fe8ec8471911baa1db1266ea15dd06b4a8a5c453883c000b031973dce08\""));
+    BOOST_CHECK_NO_THROW(TestCallRPC("getblockdeltas \"00040fe8ec8471911baa1db1266ea15dd06b4a8a5c453883c000b031973dce08\""));
     // damage the block hash (change last digit)
     CheckRPCThrows("getblockdeltas \"00040fe8ec8471911baa1db1266ea15dd06b4a8a5c453883c000b031973dce09\"",
         "Block not found");
 
-    BOOST_CHECK_NO_THROW(CallRPC("getblockhashes 1477641360 1477641360"));
-    BOOST_CHECK_NO_THROW(CallRPC("getblockhashes 1477641360 1477641360 {\"noOrphans\":true,\"logicalTimes\":true}"));
+    BOOST_CHECK_NO_THROW(TestCallRPC("getblockhashes 1477641360 1477641360"));
+    BOOST_CHECK_NO_THROW(TestCallRPC("getblockhashes 1477641360 1477641360 {\"noOrphans\":true,\"logicalTimes\":true}"));
     // Unfortunately, an unknown or mangled key is ignored
-    BOOST_CHECK_NO_THROW(CallRPC("getblockhashes 1477641360 1477641360 {\"AAAnoOrphans\":true,\"logicalTimes\":true}"));
+    BOOST_CHECK_NO_THROW(TestCallRPC("getblockhashes 1477641360 1477641360 {\"AAAnoOrphans\":true,\"logicalTimes\":true}"));
     CheckRPCThrows("getblockhashes 1477641360 1477641360 {\"noOrphans\":true,\"logicalTimes\":1}",
         "JSON value is not a boolean as expected");
     CheckRPCThrows("getblockhashes 1477641360 1477641360 {\"noOrphans\":True,\"logicalTimes\":false}",

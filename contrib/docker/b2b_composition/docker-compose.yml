@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  zcashd:
+    build:
+      context: ./zcash
+      dockerfile: b2b_composition.Dockerfile
+    ports:
+      - "18232:18232"
+    networks:
+      pipe_net:
+        ipv4_address: 172.16.238.10
+
+  lightwalletd:
+    depends_on:
+      - zcashd
+    build:
+      context: ./lightwalletd
+      dockerfile: browser_to_blockchain.Dockerfile
+    ports:
+      - "9067:9067"
+      - "9068:9068"
+    networks:
+      pipe_net:
+        ipv4_address: 172.16.238.11
+
+  envoy:
+    depends_on:
+      - lightwalletd
+    build:
+      context: ./envoy
+      dockerfile: envoy.Dockerfile
+
+networks:
+  pipe_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.238.0/24"

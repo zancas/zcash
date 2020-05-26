@@ -2,6 +2,6 @@
 
 set -ex
 /usr/bin/zcashd -printtoconsole &
-sleep 3
+sleep 6
 /usr/bin/zcash-cli --verbose generate 1
 wait

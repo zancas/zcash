@@ -1,5 +1,5 @@
 FROM          electriccoinco/zcashd:latest
-COPY          ./regtest_node_zcash.conf /srv/zcashd/.zcash/zcash.conf
+COPY          ./regtest_zcashd.conf /srv/zcashd/.zcash/zcash.conf
 RUN           /usr/bin/zcash-fetch-params --testnet
 USER          root
 RUN           apt-get update && apt-get install -y vim procps

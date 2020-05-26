@@ -14,8 +14,8 @@ services:
     depends_on:
       - zcashd
     build:
-      context: ./lightwalletd
-      dockerfile: browser_to_blockchain.Dockerfile
+      context: .
+      dockerfile: lightwalletd.Dockerfile
     ports:
       - "9067:9067"
       - "9068:9068"

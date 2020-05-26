@@ -2,7 +2,7 @@ version: '3.8'
 services:
   zcashd:
     build:
-      context: ./zcash
+      context: .
       dockerfile: b2b_composition.Dockerfile
     ports:
       - "18232:18232"

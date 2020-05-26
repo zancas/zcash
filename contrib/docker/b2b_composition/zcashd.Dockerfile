@@ -1,2 +1,3 @@
 FROM          electriccoinco/zcashd:latest
-ENTRYPOINT    ["/usr/bin/zcashd", "help"]
+COPY          ./regtest_node_zcash.conf /srv/zcashd/.zcash/zcash.conf
+ENTRYPOINT    ["/usr/bin/zcashd", "-printtoconsole"]

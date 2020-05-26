@@ -3,7 +3,7 @@ services:
   zcashd:
     build:
       context: .
-      dockerfile: b2b_composition.Dockerfile
+      dockerfile: zcashd.Dockerfile
     ports:
       - "18232:18232"
     networks:

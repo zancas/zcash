@@ -29,6 +29,12 @@ services:
     build:
       context: ./envoy
       dockerfile: envoy.Dockerfile
+    ports:
+      - "8081:8081"
+      - "9901:9901"
+    networks:
+      pipe_net:
+        ipv4_address: 172.16.238.12
 
 networks:
   pipe_net:

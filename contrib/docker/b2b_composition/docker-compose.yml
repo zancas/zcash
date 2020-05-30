@@ -26,6 +26,8 @@ services:
     networks:
       pipe_net:
         ipv4_address: 172.16.238.12
+    ports:
+      - "8081:8081"
 
 networks:
   pipe_net:

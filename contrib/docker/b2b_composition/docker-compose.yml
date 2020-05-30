@@ -4,34 +4,22 @@ services:
     build:
       context: .
       dockerfile: zcashd.Dockerfile
-    ports:
-      - "18232:18232"
     networks:
       pipe_net:
         ipv4_address: 172.16.238.10
 
   lightwalletd:
-    depends_on:
-      - zcashd
     build:
       context: .
       dockerfile: lightwalletd.Dockerfile
-    ports:
-      - "9067:9067"
-      - "9068:9068"
     networks:
       pipe_net:
         ipv4_address: 172.16.238.11
 
   envoy:
-    depends_on:
-      - lightwalletd
     build:
       context: ./envoy
       dockerfile: envoy.Dockerfile
-    ports:
-      - "8081:8081"
-      - "9901:9901"
     networks:
       pipe_net:
         ipv4_address: 172.16.238.12

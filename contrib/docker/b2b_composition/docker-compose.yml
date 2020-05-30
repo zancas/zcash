@@ -9,6 +9,9 @@ services:
         ipv4_address: 172.16.238.10
 
   lightwalletd:
+    depends_on:
+      - zcashd
+    restart: on-failure
     build:
       context: .
       dockerfile: lightwalletd.Dockerfile

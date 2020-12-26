@@ -6,11 +6,11 @@ Want to hack on the nix build system for Zcash? Welcome! This is for you.
 
 All of the nix-build specific files live inside `./nix`.
 
-We call any `derivation` defined in this repo "locally defined" in contrast to derivations defined in the `nixpkgs` repo. All locally defined derivations use the same pinned snapshot of `nixpkgs` for non-local dependencies.
+We call any `derivation` defined in this repo "locally defined" in contrast to derivations defined in the `nixpkgs` repo. All locally defined derivations use the same pinned snapshot of nixpkgs: https://github.com/NixOS/nixpkgs for non-local dependencies.
 
 ### Requirements
 
-1. Users can build zcashd for their build platform (non-cross build) with `nix build ./nix` from the repo root.
+1. Users can build zcashd for their build platform (non-cross build) with `nix-build ./contrib/nix` from the repo root.
 2. All derivations are either locally defined in this repo, or they come from a specific pinned revision of `nixpkgs`.
 3. The pinned hashes for dependencies built by the `./depends` system are parsed directly out of the `./depends` files, so that they only exist in one place and the two build systems cannot inadvertantly build different dependency revisions.
 

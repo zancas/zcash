@@ -4,7 +4,7 @@ Want to hack on the nix build system for Zcash? Welcome! This is for you.
 
 ## Design
 
-All of the nix-build specific files live inside `./nix`.
+All of the nix-build specific files live inside `./contrib/nix`.
 
 We call any `derivation` defined in this repo "locally defined" in contrast to derivations defined in the `nixpkgs` repo.
 
@@ -16,9 +16,9 @@ We call any `derivation` defined in this repo "locally defined" in contrast to d
 
 ### Code Layout
 
-#### Top Level ./nix
+#### Top Level ./contrib/nix
 
-The top-level `./nix` directory should only contain things which pertain directly to users, aside from this single `README-dev.md`.
+The top-level `./contrib/nix` directory should only contain things which pertain directly to users, aside from this single `README-dev.md`.
 
 Any top-level parameters a user may care about should live in `config.toml`. Note, though, that this isn't for "custom user-specific configuration" since a goal of the nix build is reproducibility. Instead it's for high-level params that should be shared across all builds (thus it's in revision control).
 

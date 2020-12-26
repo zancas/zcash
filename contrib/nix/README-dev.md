@@ -6,7 +6,7 @@ Want to hack on the nix build system for Zcash? Welcome! This is for you.
 
 All of the nix-build specific files live inside `./nix`.
 
-We call any `derivation` defined in this repo "locally defined" in contrast to derivations defined in the `nixpkgs` repo. All locally defined derivations use the same pinned snapshot of nixpkgs: https://github.com/NixOS/nixpkgs for non-local dependencies.
+We call any `derivation` defined in this repo "locally defined" in contrast to derivations defined in the `nixpkgs` repo.
 
 ### Requirements
 

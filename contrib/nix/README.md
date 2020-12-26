@@ -15,9 +15,9 @@ Generally, we advise you to use the production build approach unless you already
 ### Getting Started
 
 1. [install nix](https://nixos.org/guides/install-nix.html)
-2. Prepare your work directory by ensuring there are no build artifacts (aka turds).  For example you could clone a "fresh" copy of the repo.
-3. run `nix-build ./contrib/nix` NOTE: If there are large turds inside your `zcash` directory nix will warn you about some kinda' large thingie.
-4. Use/test the build results. `nix build` will create a symlink called `./result` that points to the build results inside the nix store. This is the only filesystem modification made outside of the nix store.
+2. Prepare your work directory by ensuring there are no build artifacts.  For example, you could clone a "fresh" copy of the repo.
+3. run `nix-build ./contrib/nix` NOTE: If there are large build artifacts inside your `zcash` directory nix will warn you.
+4. Use/test the build results. `nix-build` will create a symlink called `./result` that points to the build results inside the nix store. This is the only filesystem modification made outside of the nix store.
 5. If the build fails, is missing a build artifact you want/need, or if you discover any other flaw during testing the build results, please [let us know](https://github.com/zcash/zcash/issues).
 
 #### Other Derivations

@@ -1,5 +1,4 @@
 let
-  inherit (builtins) attrValues;
   pkgname = import ./pkgname.nix;
   mkInternalDerivation = import ./mkInternalDerivation.nix;
 in

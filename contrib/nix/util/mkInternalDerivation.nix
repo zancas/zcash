@@ -1,7 +1,6 @@
 # Create an "internal derivation".
 let
   inherit (import ./nixpkgs.nix) writeScript;
-  inherit (import ./config.nix) zcash;
   version = import ../version.nix;
   zcstdenv = import ./zcstdenv.nix;
   idevName = import ./idevName.nix;

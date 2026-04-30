@@ -125,6 +125,13 @@ void ThrowIfInitialBlockDownload()
     }
 }
 
+void ThrowIfShieldedProvingDisabled(const std::string& rpcName)
+{
+    if (fDisableShieldedProving) {
+        throw JSONRPCError(RPC_MISC_ERROR, strprintf("Error: %s is unavailable because zcashd was started with -disableshieldedproving. Restart without that flag to construct shielded transactions.", rpcName));
+    }
+}
+
 void WalletTxToJSON(const CWalletTx& wtx, UniValue& entry, const std::optional<int>& asOfHeight)
 {
     int confirms = wtx.GetDepthInMainChain(asOfHeight);
@@ -4918,6 +4925,8 @@ UniValue z_sendmany(const UniValue& params, bool fHelp)
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
+    ThrowIfShieldedProvingDisabled("z_sendmany");
+
     const auto& chainparams = Params();
     int nextBlockHeight = chainActive.Height() + 1;
 
@@ -5266,6 +5275,8 @@ UniValue z_shieldcoinbase(const UniValue& params, bool fHelp)
             + HelpExampleRpc("z_shieldcoinbase", "\"t1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\", \"ztfaW34Gj9FrnGUEf833ywDVL62NWXBM81u6EQnM6VR45eYnXhwztecW1SjxA7JrmAXKJhxhj3vDNEpVCQoSvVoSpmbhtjf\"")
         );
 
+    ThrowIfShieldedProvingDisabled("z_shieldcoinbase");
+
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
     ThrowIfInitialBlockDownload();
@@ -5477,6 +5488,8 @@ UniValue z_mergetoaddress(const UniValue& params, bool fHelp)
             + HelpExampleCli("z_mergetoaddress", "'[\"ANY_SAPLING\", \"t1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\"]' ztestsapling19rnyu293v44f0kvtmszhx35lpdug574twc0lwyf4s7w0umtkrdq5nfcauxrxcyfmh3m7slemqsj")
             + HelpExampleRpc("z_mergetoaddress", "[\"ANY_SAPLING\", \"t1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\"], \"ztestsapling19rnyu293v44f0kvtmszhx35lpdug574twc0lwyf4s7w0umtkrdq5nfcauxrxcyfmh3m7slemqsj\"")
         );
+
+    ThrowIfShieldedProvingDisabled("z_mergetoaddress");
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 

@@ -79,6 +79,8 @@ using namespace boost::placeholders;
 
 TracingHandle* pTracingHandle = nullptr;
 
+bool fDisableShieldedProving = false;
+
 static const bool DEFAULT_PROXYRANDOMIZE = true;
 static const bool DEFAULT_REST_ENABLE = false;
 static const bool DEFAULT_DISABLE_SAFEMODE = false;
@@ -450,6 +452,7 @@ std::string HelpMessage(HelpMessageMode mode)
         strUsage += HelpMessageOpt(
                 "-fundingstream=streamId:startHeight:endHeight:comma_delimited_addresses",
                 "Use given addresses for block subsidy share paid to the funding stream with id <streamId> (regtest-only)");
+        strUsage += HelpMessageOpt("-disableshieldedproving", "Skip loading the Sapling and Orchard proving keys at startup. Validation, sync, and transparent operations work normally; z_sendmany, z_shieldcoinbase, z_mergetoaddress, and shielded-coinbase mining will be rejected. Test-only.");
     }
     std::string debugCategories = "addrman, bench, coindb, db, http, libevent, lock, mempool, mempoolrej, net, partitioncheck, pow, proxy, prune, "
                              "rand, receiveunsafe, reindex, rpc, selectcoins, tor, valuepool, zmq, zrpc, zrpcunsafe (implies zrpc)"; // Don't translate these
@@ -859,6 +862,9 @@ static void ZC_LoadParams(
     LogPrintf("Sprout parameters will be fetched from %s if needed\n", sprout_groth16.string().c_str());
     LogPrintf("Sapling parameters are bundled in this binary\n");
     LogPrintf("Orchard parameters are generated deterministically\n");
+    if (fDisableShieldedProving) {
+        LogPrintf("-disableshieldedproving=1: skipping Sapling/Orchard proving-key load; shielded-sending RPCs will be rejected\n");
+    }
 
     gettimeofday(&tv_start, 0);
 
@@ -866,7 +872,7 @@ static void ZC_LoadParams(
         rust::String(
             reinterpret_cast<const codeunit*>(sprout_groth16_str.data()),
             sprout_groth16_str.size()),
-        true
+        !fDisableShieldedProving
     );
 
     gettimeofday(&tv_end, 0);
@@ -1187,6 +1193,8 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
         RegisterWalletRPCCommands(tableRPC);
 #endif
 
+    fDisableShieldedProving = GetBoolArg("-disableshieldedproving", false);
+
     nConnectTimeout = GetArg("-timeout", DEFAULT_CONNECT_TIMEOUT);
     if (nConnectTimeout <= 0)
         nConnectTimeout = DEFAULT_CONNECT_TIMEOUT;
@@ -1438,10 +1446,19 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
                 _("Invalid address for -mineraddress=<addr>: Unable to parse '%s' as a Zcash address.)"),
                 mapArgs["-mineraddress"]));
         }
-        if (!std::visit(ExtractMinerAddress(consensus, height), addr.value()).has_value()) {
+        auto extracted = std::visit(ExtractMinerAddress(consensus, height), addr.value());
+        if (!extracted.has_value()) {
             return InitError(strprintf(
                 _("Invalid address for -mineraddress=<addr>: '%s' (must be a Sapling or transparent P2PKH address, or a Unified Address containing a valid receiver for the most recent settled network upgrade.)"),
                 mapArgs["-mineraddress"]));
+        }
+        if (fDisableShieldedProving) {
+            bool isTransparent = std::holds_alternative<boost::shared_ptr<CReserveScript>>(extracted.value());
+            if (!isTransparent) {
+                return InitError(strprintf(
+                    _("-mineraddress='%s' resolves to a shielded address, which is incompatible with -disableshieldedproving. Use a transparent P2PKH address or a Unified Address whose preferred receiver is transparent."),
+                    mapArgs["-mineraddress"]));
+            }
         }
     }
 #endif

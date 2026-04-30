@@ -79,8 +79,6 @@ using namespace boost::placeholders;
 
 TracingHandle* pTracingHandle = nullptr;
 
-bool fDisableShieldedProving = false;
-
 static const bool DEFAULT_PROXYRANDOMIZE = true;
 static const bool DEFAULT_REST_ENABLE = false;
 static const bool DEFAULT_DISABLE_SAFEMODE = false;

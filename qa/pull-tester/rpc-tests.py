@@ -120,6 +120,7 @@ BASE_SCRIPTS= [
     'timestampindex.py',
     'decodescript.py',
     'blockchain.py',
+    'disable_shielded_proving.py',
     'disablewallet.py',
     'keypool.py',
     'getblocktemplate.py',

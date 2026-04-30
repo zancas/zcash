@@ -21,11 +21,6 @@ class thread_group;
 
 extern TracingHandle* pTracingHandle;
 
-/** When true, zcashd skips loading Sapling/Orchard proving keys at startup
- *  and rejects RPCs that would construct shielded proofs. Set by
- *  -disableshieldedproving. Test-only; defaults to false. */
-extern bool fDisableShieldedProving;
-
 void StartShutdown();
 bool ShutdownRequested();
 /** Interrupt threads */

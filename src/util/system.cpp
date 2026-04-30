@@ -82,6 +82,7 @@ map<string, vector<string>> mapMultiArgs;
 bool fDebug = false;
 bool fDaemon = false;
 bool fServer = false;
+bool fDisableShieldedProving = false;
 
 /** Interpret string as boolean, for argument parsing */
 static bool InterpretBool(const std::string& strValue)

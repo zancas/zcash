@@ -36,6 +36,11 @@ extern std::map<std::string, std::vector<std::string> > mapMultiArgs;
 extern bool fDebug;
 extern bool fServer;
 
+/** When true, zcashd skips loading Sapling/Orchard proving keys at startup
+ *  and rejects RPCs that would construct shielded proofs. Set by
+ *  -disableshieldedproving. Test-only; defaults to false. */
+extern bool fDisableShieldedProving;
+
 extern const char * const BITCOIN_CONF_FILENAME;
 extern const char * const BITCOIN_PID_FILENAME;
 

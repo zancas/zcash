@@ -608,6 +608,62 @@ BOOST_AUTO_TEST_CASE(coins_coinbase_spends)
     }
 }
 
+// Verify that the runtime nCoinbaseMaturity field on Consensus::Params drives
+// the CheckTxInputs maturity rule. This pins that the consensus check actually
+// reads from params (not the compile-time COINBASE_MATURITY constant), so the
+// -regtestcoinbasematurity override has effect end-to-end.
+BOOST_AUTO_TEST_CASE(coinbase_maturity_runtime_override)
+{
+    CCoinsViewTest base;
+    CCoinsViewCacheTest cache(&base);
+
+    // Coinbase mined at height 100.
+    CMutableTransaction mtx;
+    mtx.vin.resize(1);
+    mtx.vin[0].scriptSig = CScript() << OP_1;
+    mtx.vin[0].nSequence = 0;
+    mtx.vout.resize(1);
+    mtx.vout[0].nValue = 500;
+    mtx.vout[0].scriptPubKey = CScript() << OP_1;
+    CTransaction coinbaseTx(mtx);
+    BOOST_CHECK(coinbaseTx.IsCoinBase());
+    UpdateCoins(coinbaseTx, cache, 100);
+
+    // Spend-without-transparent-outputs (so we exercise only the maturity rule).
+    CMutableTransaction spendMtx;
+    spendMtx.vin.resize(1);
+    spendMtx.vin[0].prevout = COutPoint(coinbaseTx.GetHash(), 0);
+    spendMtx.vin[0].scriptSig = CScript() << OP_1;
+    spendMtx.vin[0].nSequence = 0;
+    CTransaction spendTx(spendMtx);
+
+    Consensus::Params params = Params(CBaseChainParams::REGTEST).GetConsensus();
+
+    // With nCoinbaseMaturity = 5, depth 4 (height 104) is rejected, depth 5 (height 105) accepted.
+    params.nCoinbaseMaturity = 5;
+    {
+        CValidationState state;
+        BOOST_CHECK(!Consensus::CheckTxInputs(spendTx, state, cache, 104, params));
+        BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-txns-premature-spend-of-coinbase");
+    }
+    {
+        CValidationState state;
+        BOOST_CHECK(Consensus::CheckTxInputs(spendTx, state, cache, 105, params));
+    }
+
+    // With nCoinbaseMaturity = 1, depth 0 rejected, depth 1 accepted.
+    params.nCoinbaseMaturity = 1;
+    {
+        CValidationState state;
+        BOOST_CHECK(!Consensus::CheckTxInputs(spendTx, state, cache, 100, params));
+        BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-txns-premature-spend-of-coinbase");
+    }
+    {
+        CValidationState state;
+        BOOST_CHECK(Consensus::CheckTxInputs(spendTx, state, cache, 101, params));
+    }
+}
+
 // This test is similar to the previous test
 // except the emphasis is on testing the functionality of UpdateCoins
 // random txs are created and UpdateCoins is used to update the cache stack

@@ -338,6 +338,16 @@ struct Params {
 
     bool fCoinbaseMustBeShielded = false;
 
+    /**
+     * Number of blocks a coinbase output must be buried before it can be
+     * spent. Defaults to the network rule (COINBASE_MATURITY = 100). Only
+     * mutable on regtest, via -regtestcoinbasematurity, for integration
+     * tests that need faster coinbase maturation. The compile-time
+     * COINBASE_MATURITY (and derived MAX_REORG_LENGTH / WITNESS_CACHE_SIZE)
+     * remain at 100, so the override is safe only for values <= 100.
+     */
+    int nCoinbaseMaturity = 100;
+
     /** Needs to evenly divide MAX_SUBSIDY to avoid rounding errors. */
     int nSubsidySlowStartInterval;
     /**

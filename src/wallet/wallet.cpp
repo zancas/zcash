@@ -6926,7 +6926,7 @@ int CMerkleTx::GetBlocksToMaturity(const std::optional<int>& asOfHeight) const
 {
     if (!IsCoinBase())
         return 0;
-    return max(0, (COINBASE_MATURITY+1) - GetDepthInMainChain(asOfHeight));
+    return max(0, (Params().GetConsensus().nCoinbaseMaturity + 1) - GetDepthInMainChain(asOfHeight));
 }
 
 

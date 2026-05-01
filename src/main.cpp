@@ -2605,7 +2605,7 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
 
             if (coins->IsCoinBase()) {
                 // Ensure that coinbases are matured
-                if (nSpendHeight - coins->nHeight < COINBASE_MATURITY) {
+                if (nSpendHeight - coins->nHeight < consensusParams.nCoinbaseMaturity) {
                     return state.Invalid(false,
                         REJECT_INVALID, "bad-txns-premature-spend-of-coinbase",
                         strprintf("tried to spend coinbase at depth %d", nSpendHeight - coins->nHeight));

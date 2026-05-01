@@ -497,7 +497,7 @@ int printMetrics(size_t cols, bool mining)
                     if ((height > 0) && (height <= consensusParams.GetLastFoundersRewardBlockHeight(height))) {
                         subsidy -= subsidy/5;
                     }
-                    if (std::max(0, COINBASE_MATURITY - (tipHeight - height)) > 0) {
+                    if (std::max(0, consensusParams.nCoinbaseMaturity - (tipHeight - height)) > 0) {
                         immature += subsidy;
                     } else {
                         mature += subsidy;

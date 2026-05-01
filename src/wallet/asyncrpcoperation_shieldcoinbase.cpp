@@ -141,7 +141,7 @@ void AsyncRPCOperation_shieldcoinbase::main() {
 
 
 Remaining AsyncRPCOperation_shieldcoinbase::prepare(CWallet& wallet) {
-    auto spendable = builder_.FindAllSpendableInputs(wallet, ztxoSelector_, COINBASE_MATURITY);
+    auto spendable = builder_.FindAllSpendableInputs(wallet, ztxoSelector_, Params().GetConsensus().nCoinbaseMaturity);
 
     // Find unspent coinbase utxos and update estimated size
     unsigned int max_tx_size = MAX_TX_SIZE_AFTER_SAPLING;

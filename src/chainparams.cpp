@@ -966,6 +966,11 @@ public:
         fZIP209Enabled = true;
     }
 
+    void SetRegTestCoinbaseMaturity(int n) {
+        assert(n >= 1 && n <= COINBASE_MATURITY);
+        consensus.nCoinbaseMaturity = n;
+    }
+
     void SetRegTestAllowLegacyChainSupplyData() {
         fRegTestAllowLegacyChainSupplyData = true;
     }
@@ -1035,6 +1040,28 @@ void SelectParams(const std::string& network)
     // Enable ZIP 209 enforcement without zeroing shielded pool balances.
     if (network == CBaseChainParams::REGTEST && mapArgs.count("-regtestenablezip209")) {
         regTestParams.SetRegTestZIP209Enabled();
+    }
+
+    // Override coinbase maturity for regtest integration tests. The compile-time
+    // COINBASE_MATURITY (and derived MAX_REORG_LENGTH / WITNESS_CACHE_SIZE) are
+    // unchanged, so the override is bounded to [1, COINBASE_MATURITY].
+    if (network == CBaseChainParams::REGTEST && mapArgs.count("-regtestcoinbasematurity")) {
+        const std::string& s = mapArgs.at("-regtestcoinbasematurity");
+        int n;
+        try {
+            size_t pos = 0;
+            n = std::stoi(s, &pos);
+            if (pos != s.size()) throw std::invalid_argument("trailing characters");
+        } catch (const std::exception&) {
+            throw std::runtime_error(strprintf(
+                "-regtestcoinbasematurity=%s is not a valid integer.", s));
+        }
+        if (n < 1 || n > COINBASE_MATURITY) {
+            throw std::runtime_error(strprintf(
+                "-regtestcoinbasematurity=%d is out of range; must be between 1 and %d.",
+                n, COINBASE_MATURITY));
+        }
+        regTestParams.SetRegTestCoinbaseMaturity(n);
     }
 }
 
